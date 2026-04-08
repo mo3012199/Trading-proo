@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0f17">
+<title>TradePro ICT Engine V12.2 Extended</title>
+<style>
+:root{
+  --bg:#070b11; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.13);
+  --txt:#e7edf7; --muted:#8e9bb0; --gold:#d9b765; --green:#3dd68c; --red:#f56a79; --blue:#67a7ff;
+  --shadow:0 16px 42px rgba(0,0,0,.34); --radius:22px;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;padding:0;font-family:Inter,Arial,sans-serif;color:var(--txt);
+  background:
+    radial-gradient(circle at top left, rgba(217,183,101,.08), transparent 22%),
+    radial-gradient(circle at top right, rgba(98,169,255,.08), transparent 20%),
+    linear-gradient(180deg,#06090f,#0a111b 55%,#09111b 100%);
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 26%);z-index:0}
+.app{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:0 18px 80px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,11,17,.95),rgba(7,11,17,.72))}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800}
+.logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#f0d589,#b98b31);box-shadow:0 10px 26px rgba(217,183,101,.2);color:#0a0a08}
+.badge{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--gold);padding:4px 9px;border:1px solid rgba(217,183,101,.22);border-radius:999px;background:rgba(217,183,101,.08)}
+.shell{padding-top:26px}.hero{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.card,.config-card,.panel{background:linear-gradient(180deg,rgba(15,23,38,.96),rgba(10,16,28,.94));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero .card{padding:16px 18px}small.k{display:block;color:var(--muted);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px}
+.big{font:800 24px/1.1 Inter,Arial,sans-serif}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.green{color:var(--green)} .red{color:var(--red)} .gold{color:var(--gold)} .blue{color:var(--blue)}
+.main{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}.config-card,.panel{padding:18px}
+.section-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{display:block;margin-bottom:6px;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+input,select{width:100%;padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line2);color:var(--txt);outline:none;font-size:14px}
+input:focus,select:focus{border-color:rgba(217,183,101,.5);box-shadow:0 0 0 3px rgba(217,183,101,.1)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{appearance:none;border:0;cursor:pointer;padding:12px 15px;border-radius:14px;font-weight:800;color:var(--txt);background:rgba(255,255,255,.05);border:1px solid var(--line2)}
+button.primary{color:#120d02;background:linear-gradient(135deg,#f0d589,#c89b40);border:0}button[disabled]{opacity:.6;cursor:not-allowed}
+.note{margin-top:12px;padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid var(--line);color:var(--muted);font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.mini{padding:12px 13px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--line)}
+.mini b{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:1.45;word-break:break-word}
+.mini small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.story,.mono-text{white-space:pre-wrap;color:#d7deea;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;max-height:720px}table{width:100%;border-collapse:collapse;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px;background:rgba(255,255,255,.02)}tr:last-child td{border-bottom:0}
+.scorebar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid var(--line);margin-top:10px}.scorebar>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold),var(--green))}
+.footer-note{margin-top:14px;color:var(--muted);font-size:12px}.pillrow{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:5px 8px;border-radius:999px;border:1px solid var(--line2);font-size:11px;color:var(--muted)}
+@media (max-width:1100px){.hero,.main,.form-grid,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">⚡</div>
+      <div>
+        <div>TradePro ICT Engine</div>
+        <div class="badge">V12.2 · Extended Bias + Chunked Loader</div>
+      </div>
+    </div>
+    <div class="badge" id="liveClock">--:--:--</div>
+  </div>
+
+  <div class="shell">
+    <div class="hero">
+      <div class="card"><small class="k">Backtest Result</small><div class="big mono" id="btResult">WAITING</div></div>
+      <div class="card"><small class="k">Total Trades</small><div class="big mono" id="btTrades">0</div></div>
+      <div class="card"><small class="k">Win Rate</small><div class="big mono" id="btWinRate">0%</div></div>
+      <div class="card"><small class="k">Net R</small><div class="big mono" id="btNetR">0.00R</div></div>
+      <div class="card"><small class="k">Max Drawdown</small><div class="big mono" id="btDrawdown">0.00R</div></div>
+      <div class="card"><small class="k">Final Equity</small><div class="big mono" id="btEquity">$0.00</div></div>
+    </div>
+
+    <div class="main">
+      <div>
+        <div class="config-card">
+          <div class="section-head">
+            <div>
+              <div style="font-weight:800">Configuration</div>
+              <div style="font-size:12px;color:var(--muted)">H4/H1 context → 5m location → 1m confirmation | extended history mode</div>
+            </div>
+            <div class="badge">V12.2</div>
+          </div>
+          <div class="form-grid">
+            <div><label>TwelveData API Key</label><input id="apiKey" type="password" placeholder="Paste API key"></div>
+            <div><label>Symbol</label>
+              <select id="symbol"><option value="XAU/USD">XAU/USD</option><option value="EUR/USD">EUR/USD</option><option value="GBP/USD">GBP/USD</option><option value="USD/JPY">USD/JPY</option></select>
+            </div>
+            <div><label>Historical 1m Bars</label>
+              <select id="bars"><option value="4000">4000</option><option value="6000">6000</option><option value="10000" selected>10000</option><option value="15000">15000</option><option value="20000">20000</option></select>
+            </div>
+            <div><label>Decision Mode</label><select id="decisionMode"><option value="FLEXIBLE" selected>FLEXIBLE</option><option value="STRICT">STRICT</option></select></div>
+            <div><label>Minimum Score</label><select id="minScore"><option value="40">40</option><option value="45">45</option><option value="50" selected>50</option><option value="55">55</option><option value="60">60</option><option value="65">65</option></select></div>
+            <div><label>Risk per Trade</label><select id="riskPct"><option value="0.5">0.5%</option><option value="1" selected>1%</option><option value="2">2%</option></select></div>
+            <div><label>Prime Sessions Only</label><select id="primeOnly"><option value="false" selected>No</option><option value="true">Yes</option></select></div>
+            <div><label>5m FVG Lookback</label><select id="fvgLookback"><option value="30">30</option><option value="50" selected>50</option><option value="80">80</option></select></div>
+            <div><label>Liquidity Lookback</label><select id="liqLookback"><option value="40">40</option><option value="60" selected>60</option><option value="90">90</option></select></div>
+            <div><label>Min RR Ratio</label><select id="minRR"><option value="2" selected>2.0R</option><option value="2.5">2.5R</option><option value="3">3.0R</option></select></div>
+            <div><label>H1 Bias Mode</label><select id="h1Mode"><option value="penalty" selected>Penalty Only</option><option value="required">Required</option><option value="boost">Boost Only</option></select></div>
+            <div><label>Sweep Requirement</label><select id="sweepMode"><option value="reversal_only" selected>Reversal Only</option><option value="always">Always</option><option value="soft">Soft</option></select></div>
+            <div><label>Killzone Weight</label><select id="kzMode"><option value="high" selected>High</option><option value="medium">Medium</option><option value="soft">Soft</option></select></div>
+          </div>
+          <div class="btns">
+            <button class="primary" id="runBtn">Run Backtest</button>
+            <button id="saveBtn">Save Key</button>
+            <button id="exportBtn">Export CSV</button>
+          </div>
+          <div class="note" id="statusNote">Ready. V12.2 supports chunked 1m loading up to 20000 bars.</div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Performance</div></div>
+          <div class="grid4">
+            <div class="mini"><small>Wins</small><b id="btWins">0</b></div><div class="mini"><small>Losses</small><b id="btLosses">0</b></div><div class="mini"><small>Breakevens</small><b id="btBE">0</b></div><div class="mini"><small>Profit Factor</small><b id="btPF">0.00</b></div>
+            <div class="mini"><small>Average Win</small><b id="btAvgWin">0.00R</b></div><div class="mini"><small>Average Loss</small><b id="btAvgLoss">0.00R</b></div><div class="mini"><small>Best Trade</small><b id="btBest">0.00R</b></div><div class="mini"><small>Worst Trade</small><b id="btWorst">0.00R</b></div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Diagnostics</div></div>
+          <div class="grid4">
+            <div class="mini"><small>Scanned</small><b id="diagScanned">0</b></div><div class="mini"><small>No Trade</small><b id="diagNoTrade">0</b></div><div class="mini"><small>Wait/Forming</small><b id="diagWait">0</b></div><div class="mini"><small>Trade Signals</small><b id="diagTrade">0</b></div>
+            <div class="mini"><small>Buy Trades</small><b id="diagBuys">0</b></div><div class="mini"><small>Sell Trades</small><b id="diagSells">0</b></div><div class="mini"><small>Average Score</small><b id="diagAvgScore">0</b></div><div class="mini"><small>Mode</small><b id="diagMode">FLEXIBLE</b></div>
+          </div>
+          <div class="scorebar"><span id="scoreFill"></span></div>
+          <div class="footer-note">Target now: better context detection + extended historical loading.</div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Engine Notes</div></div>
+          <div class="story" id="engineStory">No run yet.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="section-head"><div style="font-weight:800">Trade Log</div></div>
+          <div class="table-wrap"><table id="tradeTable"><thead><tr><th>#</th><th>Time</th><th>Side</th><th>Type</th><th>Score</th><th>Entry</th><th>SL</th><th>TP2</th><th>Outcome</th><th>R</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Equity Curve</div></div>
+          <canvas id="equityCanvas" width="700" height="260" style="width:100%;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:16px"></canvas>
+          <div class="mono-text" id="equityNote">No curve yet.</div>
+        </div>
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Recent Debug</div></div>
+          <div class="story" id="debugNotes">No run yet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const STORAGE_KEY='tradepro_v122_key';
+let lastTrades=[];
+const $=id=>document.getElementById(id);
+const setText=(id,v,cls='')=>{const el=$(id); if(!el) return; el.textContent=v??'—'; el.className=cls||'';};
+const fmt=(n,d=2)=>Number.isFinite(Number(n))?Number(n).toFixed(d):'—';
+const status=msg=>$('statusNote').textContent=msg;
+function saveKey(){localStorage.setItem(STORAGE_KEY,$('apiKey').value.trim()); status('API key saved.');}
+function loadKey(){$('apiKey').value=localStorage.getItem(STORAGE_KEY)||'';}
+function updateClock(){$('liveClock').textContent=new Intl.DateTimeFormat('en-CA',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());}
+setInterval(updateClock,1000); updateClock();
+
+async function fetchSeries(symbol,interval,apikey,outputsize=5000,end_date=''){ 
+  const params=new URLSearchParams({symbol,interval,outputsize:String(outputsize),timezone:'UTC',apikey});
+  if(end_date) params.set('end_date', end_date);
+  const url='https://api.twelvedata.com/time_series?'+params.toString();
+  const res=await fetch(url);
+  const json=await res.json();
+  if(!json.values) throw new Error(json.message||('Failed to fetch '+interval));
+  return json.values.map(r=>({datetime:r.datetime,open:+r.open,high:+r.high,low:+r.low,close:+r.close})).reverse();
+}
+async function fetchSeriesChunked(symbol, interval, apikey, totalBars){
+  const step=5000;
+  let all=[];
+  let endDate='';
+  let remaining=totalBars;
+  let guard=0;
+  while(remaining>0 && guard<20){
+    const size=Math.min(step, remaining);
+    status(`Fetching ${interval} chunk ${guard+1}... (${totalBars-remaining}/${totalBars})`);
+    const chunk=await fetchSeries(symbol, interval, apikey, size, endDate);
+    if(!chunk.length) break;
+    all=[...chunk, ...all];
+    remaining-=chunk.length;
+    endDate=chunk[0].datetime;
+    if(chunk.length < size) break;
+    guard++;
+  }
+  const dedup=[]; const seen=new Set();
+  for(const c of all){ if(!seen.has(c.datetime)){seen.add(c.datetime); dedup.push(c);} }
+  dedup.sort((a,b)=>Date.parse(a.datetime.replace(' ','T')+'Z')-Date.parse(b.datetime.replace(' ','T')+'Z'));
+  return dedup.slice(-totalBars);
+}
+function toTs(dt){return Date.parse(dt.replace(' ','T')+'Z');}
+function sliceTo(arr, idx){return idx>=0?arr.slice(0,idx+1):[];}
+function findLastIndexAtOrBefore(arr,targetTs){let lo=0,hi=arr.length-1,ans=-1; while(lo<=hi){const mid=(lo+hi)>>1; const ts=toTs(arr[mid].datetime); if(ts<=targetTs){ans=mid; lo=mid+1;} else hi=mid-1;} return ans;}
+function atr(data,len=14){if(!data||data.length<len+1) return null; let sum=0; for(let i=data.length-len;i<data.length;i++){const c=data[i],p=data[i-1]; sum+=Math.max(c.high-c.low,Math.abs(c.high-p.close),Math.abs(c.low-p.close));} return sum/len;}
+function safe(v){return Number.isFinite(+v)?+v:null;}
+function calcR(entry,sl,exit,side){const risk=Math.abs(entry-sl); if(!risk) return 0; return side==='BUY'?(exit-entry)/risk:(entry-exit)/risk;}
+
+function adaptiveSwingParams(candles, tf){
+  const a=atr(candles,14)||0;
+  const recent=candles.slice(-40);
+  const avgRange=recent.length?recent.reduce((s,c)=>s+(c.high-c.low),0)/recent.length:0;
+  if(tf==='H4') return {left:Math.max(5, a>avgRange*1.4?7:6), right:Math.max(5, a>avgRange*1.4?7:6)};
+  if(tf==='H1') return {left:4, right:4};
+  if(tf==='M5') return {left:2, right:2};
+  return {left:2,right:2};
+}
+function buildSwings(candles,left=3,right=3){
+  if(!candles||candles.length<left+right+5) return {highs:[],lows:[],trend:'RANGE',lastPH:null,lastPL:null,prevPH:null,prevPL:null};
+  const highs=[], lows=[];
+  for(let i=left;i<candles.length-right;i++){
+    let isPH=true,isPL=true;
+    for(let j=i-left;j<=i+right;j++){
+      if(j===i) continue;
+      if(candles[j].high>=candles[i].high) isPH=false;
+      if(candles[j].low<=candles[i].low) isPL=false;
+    }
+    if(isPH) highs.push({price:candles[i].high,index:i,time:candles[i].datetime});
+    if(isPL) lows.push({price:candles[i].low,index:i,time:candles[i].datetime});
+  }
+  const lastPH=highs.at(-1)||null, prevPH=highs.at(-2)||null;
+  const lastPL=lows.at(-1)||null, prevPL=lows.at(-2)||null;
+  const tol=(atr(candles,14)||0)*0.12;
+  let trend='RANGE';
+  if(lastPH&&prevPH&&lastPL&&prevPL){
+    const HH=lastPH.price>prevPH.price+tol, HL=lastPL.price>prevPL.price+tol;
+    const LH=lastPH.price<prevPH.price-tol, LL=lastPL.price<prevPL.price-tol;
+    if(HH&&HL) trend='BULLISH'; else if(LH&&LL) trend='BEARISH';
+  }
+  return {highs,lows,trend,lastPH,lastPL,prevPH,prevPL,tol};
+}
+function getBias(candles,tf){const p=adaptiveSwingParams(candles,tf); return buildSwings(candles,p.left,p.right);}
+function getPDRange(candles,sw){
+  const close=candles.at(-1)?.close; if(!close) return {zone:'UNKNOWN'};
+  let high,low;
+  if(sw.lastPH&&sw.lastPL){high=Math.max(sw.lastPH.price, sw.prevPH?.price??-Infinity); low=Math.min(sw.lastPL.price, sw.prevPL?.price??Infinity);} else {
+    const s=candles.slice(-40); high=Math.max(...s.map(c=>c.high)); low=Math.min(...s.map(c=>c.low));
+  }
+  const eq=(high+low)/2; const q1=low+(high-low)*0.25; const q3=low+(high-low)*0.75;
+  let zone='EQ'; if(close<=q1) zone='DEEP_DISCOUNT'; else if(close<eq) zone='DISCOUNT'; else if(close>=q3) zone='DEEP_PREMIUM'; else if(close>eq) zone='PREMIUM';
+  return {zone,eq,rangeHigh:high,rangeLow:low};
+}
+function isValidPD(zone,side){return side==='BUY'?['DISCOUNT','DEEP_DISCOUNT'].includes(zone):['PREMIUM','DEEP_PREMIUM'].includes(zone);}
+function getKillzone(datetime,mode='high'){
+  const d=new Date(datetime.replace(' ','T')+'Z'); const h=d.getUTCHours(); const m=d.getUTCMinutes(); const t=h+m/60;
+  let score=-15, kz='Dead';
+  if(t>=2 && t<=5){kz='London_Open'; score=20;} else if(t>=7 && t<=10){kz='NY_Open'; score=20;} else if(t>=19.5 && t<=20.5){kz='Asia_Open'; score=10;} else if(t>=13 && t<=14){kz='NY_Lunch'; score=5;}
+  if(mode==='medium') score=Math.round(score*0.7); if(mode==='soft') score=Math.round(score*0.45);
+  return {kz,score,prime:['London_Open','NY_Open'].includes(kz)};
+}
+function detectSwingPivots(candles,lookback=60,left=2,right=2){const s=candles.slice(-lookback); const piv=[]; for(let i=left;i<s.length-right;i++){let ph=true,pl=true; for(let j=i-left;j<=i+right;j++){if(j===i) continue; if(s[j].high>=s[i].high) ph=false; if(s[j].low<=s[i].low) pl=false;} if(ph) piv.push({type:'PH',price:s[i].high}); if(pl) piv.push({type:'PL',price:s[i].low});} return piv;}
+function detectSweep(candles,side,atrVal,liqLookback=60){
+  const piv=detectSwingPivots(candles,Math.max(60,liqLookback),2,2); const last=candles.at(-1); const tol=Math.max((atrVal||1)*0.15,1.0);
+  if(side==='BUY'){
+    const lows=piv.filter(p=>p.type==='PL').slice(-6);
+    for(const pl of lows){ for(let i=candles.length-4;i<candles.length;i++){ if(i<0) continue; const c=candles[i]; if(c.low<pl.price-tol && c.close>pl.price) return {swept:true,type:'SSL_SWEEP',quality:'HIGH',level:pl.price}; }
+      if(last.low<pl.price && last.close>pl.price-tol*2) return {swept:true,type:'SSL_SWEEP',quality:'MEDIUM',level:pl.price}; }
+  } else {
+    const highs=piv.filter(p=>p.type==='PH').slice(-6);
+    for(const ph of highs){ for(let i=candles.length-4;i<candles.length;i++){ if(i<0) continue; const c=candles[i]; if(c.high>ph.price+tol && c.close<ph.price) return {swept:true,type:'BSL_SWEEP',quality:'HIGH',level:ph.price}; }
+      if(last.high>ph.price && last.close<ph.price+tol*2) return {swept:true,type:'BSL_SWEEP',quality:'MEDIUM',level:ph.price}; }
+  }
+  return {swept:false,type:'NONE',quality:'LOW',level:null};
+}
+function detectFVGs(candles,side,lookback=50){
+  const start=Math.max(2,candles.length-lookback), a=atr(candles,14)||0, price=candles.at(-1)?.close, fvgs=[];
+  for(let i=start;i<candles.length-1;i++){
+    const c1=candles[i-2],c2=candles[i-1],c3=candles[i]; const range=Math.max(c2.high-c2.low,1e-7); const body=Math.abs(c2.close-c2.open); const bodyRatio=body/range; const impulse=bodyRatio>=0.45 || range>=a*0.7;
+    if(side==='BUY' && c3.low>c1.high && impulse){const gap=c3.low-c1.high; if(gap>0) fvgs.push({type:'BFVG',top:c3.low,bottom:c1.high,mid:(c3.low+c1.high)/2,size:gap,index:i,filled:false});}
+    if(side==='SELL' && c3.high<c1.low && impulse){const gap=c1.low-c3.high; if(gap>0) fvgs.push({type:'SFVG',top:c1.low,bottom:c3.high,mid:(c1.low+c3.high)/2,size:gap,index:i,filled:false});}
+  }
+  fvgs.forEach(f=>{for(const c of candles.slice(f.index+1)){ if(f.type==='BFVG'&&c.low<f.bottom) f.filled=true; if(f.type==='SFVG'&&c.high>f.top) f.filled=true; }});
+  const active=fvgs.filter(f=>!f.filled); if(!active.length) return null; active.sort((a,b)=>Math.abs(price-a.mid)-Math.abs(price-b.mid)); return active[0];
+}
+function detectStructureShift(candles,side,sw){
+  if(!candles||candles.length<5) return {valid:false,type:'NONE'}; const last=candles.at(-1); const body=Math.abs(last.close-last.open); const range=Math.max(last.high-last.low,1e-7); const displaced=body/range>=0.5;
+  if(side==='BUY'){
+    if(sw.lastPH&&last.close>sw.lastPH.price&&displaced) return {valid:true,type:'BULLISH_BOS'};
+    if(sw.prevPH&&last.close>sw.prevPH.price&&displaced) return {valid:true,type:'BULLISH_CHOCH'};
+    const rh=Math.max(...candles.slice(-5,-1).map(c=>c.high)); if(last.close>rh&&last.close>last.open) return {valid:true,type:'BULLISH_MICRO_BOS'};
+  } else {
+    if(sw.lastPL&&last.close<sw.lastPL.price&&displaced) return {valid:true,type:'BEARISH_BOS'};
+    if(sw.prevPL&&last.close<sw.prevPL.price&&displaced) return {valid:true,type:'BEARISH_CHOCH'};
+    const rl=Math.min(...candles.slice(-5,-1).map(c=>c.low)); if(last.close<rl&&last.close<last.open) return {valid:true,type:'BEARISH_MICRO_BOS'};
+  }
+  return {valid:false,type:'NONE'};
+}
+function detectDisplacement(candles,side){
+  if(!candles||candles.length<10) return {valid:false}; const a=atr(candles,14)||0;
+  for(let i=candles.length-4;i<candles.length-1;i++){
+    if(i<0) continue; const c=candles[i]; const range=c.high-c.low; const body=Math.abs(c.close-c.open); const bodyRatio=body/Math.max(range,1e-7); const atrRatio=a?range/a:0;
+    if(side==='BUY' && c.close>c.open && bodyRatio>=0.55 && atrRatio>=0.8) return {valid:true};
+    if(side==='SELL' && c.close<c.open && bodyRatio>=0.55 && atrRatio>=0.8) return {valid:true};
+  }
+  return {valid:false};
+}
+function detectOTE(swLow, swHigh, price, side){
+  if(!Number.isFinite(swLow)||!Number.isFinite(swHigh)||swHigh<=swLow) return {inOTE:false}; const range=swHigh-swLow;
+  const fib618=side==='BUY'?swHigh-range*0.618:swLow+range*0.618; const fib786=side==='BUY'?swHigh-range*0.786:swLow+range*0.786;
+  const low=Math.min(fib618,fib786), high=Math.max(fib618,fib786);
+  return {inOTE:price>=low && price<=high, fib618, fib786};
+}
+function detectEntry(m1,side,fvg){
+  if(!m1||m1.length<3) return {valid:false,note:'NO_ENTRY'}; const last=m1.at(-1), prev=m1.at(-2); const body=Math.abs(last.close-last.open); const range=Math.max(last.high-last.low,1e-7); const bodyRatio=body/range;
+  if(side==='BUY'){
+    if(fvg && last.low<=fvg.mid && last.close>last.open && bodyRatio>=0.5) return {valid:true,entry:last.close,note:'FVG_MID_REJECT'};
+    if(last.close>prev.high && last.close>last.open && bodyRatio>=0.5) return {valid:true,entry:last.close,note:'BREAK_CONFIRM'};
+  } else {
+    if(fvg && last.high>=fvg.mid && last.close<last.open && bodyRatio>=0.5) return {valid:true,entry:last.close,note:'FVG_MID_REJECT'};
+    if(last.close<prev.low && last.close<last.open && bodyRatio>=0.5) return {valid:true,entry:last.close,note:'BREAK_CONFIRM'};
+  }
+  return {valid:false,note:'NO_ENTRY'};
+}
+function biasDirection(h4sw,h1sw,h1Mode='penalty'){
+  const h4Bias=h4sw.trend, h1Bias=h1sw.trend;
+  let side='NONE';
+  if(h1Bias==='BULLISH') side='BUY'; else if(h1Bias==='BEARISH') side='SELL'; else if(h4Bias==='BULLISH') side='BUY'; else if(h4Bias==='BEARISH') side='SELL';
+  return {side,h4Bias,h1Bias};
+}
+function computeScoreV122(f){
+  const reasons=[], missing=[]; let score=0;
+  score += f.kz.score; reasons.push(`${f.kz.kz} ${f.kz.score>=0?'+':''}${f.kz.score}`);
+  if(f.validPD5){score+=18; reasons.push('5m PD valid +18');} else {score-=18; missing.push('Invalid 5m PD -18');}
+  if(f.validPD1){score+=8; reasons.push('1h PD support +8');} else if(f.h1Mode==='required'){score-=12; missing.push('1h PD missing -12');} else if(f.h1Mode==='penalty'){score-=5; missing.push('1h PD penalty -5');}
+  if(f.bias.h1Bias==='RANGE'){ if(f.h1Mode==='required'){score-=18; missing.push('H1 range -18');} else if(f.h1Mode==='penalty'){score-=8; missing.push('H1 range -8');} }
+  if(f.bias.h1Bias===f.side.replace('BUY','BULLISH').replace('SELL','BEARISH')){score+=10; reasons.push('H1 aligned +10');}
+  if(f.sweep.swept){score += f.sweep.quality==='HIGH'?18:12; reasons.push(`Sweep ${f.sweep.type} +${f.sweep.quality==='HIGH'?18:12}`);} else missing.push('No sweep');
+  if(f.fvg){score += 16; reasons.push(`FVG ${f.fvg.type} +16`);} else missing.push('No FVG');
+  if(f.shift.valid){score += 16; reasons.push(`${f.shift.type} +16`);} else missing.push('No shift');
+  if(f.ote.inOTE){score+=10; reasons.push('OTE zone +10');}
+  if(f.disp.valid){score+=6; reasons.push('Displacement +6');}
+  if(f.entry.valid){score+=16; reasons.push(`Entry ${f.entry.note} +16`);} else missing.push('No 1m confirm');
+  const coreCount = (f.sweep.swept?1:0) + (f.fvg?1:0) + (f.shift.valid?1:0);
+  if(coreCount>=2){score+=10; reasons.push('2 core signals +10');} else {score-=10; missing.push('Need 2 core signals -10');}
+  score=Math.max(0,Math.min(100,score));
+  return {score,reasons,missing,coreCount};
+}
+function runPipelineV122(h4,h1,m5,m1,config){
+  if(!h4.length||!h1.length||!m5.length||!m1.length) return {status:'ERROR', reason:'Missing data'};
+  const h4sw=getBias(h4,'H4'), h1sw=getBias(h1,'H1'), m5sw=getBias(m5,'M5');
+  const bias=biasDirection(h4sw,h1sw,config.h1Mode);
+  if(bias.side==='NONE') return {status:'NO TRADE', reason:'No H1/H4 directional bias', debug:{h4:h4sw.trend,h1:h1sw.trend}};
+  const side=bias.side;
+  const m5pd=getPDRange(m5,m5sw), h1pd=getPDRange(h1,h1sw);
+  const validPD5=isValidPD(m5pd.zone,side), validPD1=isValidPD(h1pd.zone,side);
+  const kz=getKillzone(m1.at(-1).datetime, config.kzMode); if(config.primeOnly && !kz.prime) return {status:'NO TRADE', reason:`Not prime session: ${kz.kz}`};
+  const a=atr(m5,14)||5;
+  const sweep=detectSweep(m5,side,a,config.liqLookback), fvg=detectFVGs(m5,side,config.fvgLookback), shift=detectStructureShift(m5,side,m5sw), disp=detectDisplacement(m5,side);
+  const swLow=(m5sw.lastPL?.price ?? Math.min(...m5.slice(-20).map(c=>c.low))), swHigh=(m5sw.lastPH?.price ?? Math.max(...m5.slice(-20).map(c=>c.high)));
+  const ote=detectOTE(swLow, swHigh, m5.at(-1).close, side);
+  const entry=detectEntry(m1,side,fvg);
+  const scoring=computeScoreV122({kz,validPD5,validPD1,h1Mode:config.h1Mode,bias,side,sweep,fvg,shift,ote,disp,entry});
+  const reversalSetup = sweep.swept && (fvg || shift.valid);
+  const continuationSetup = !sweep.swept && fvg && shift.valid && validPD5;
+  let allow=true;
+  if(config.sweepMode==='always' && !sweep.swept) allow=false;
+  if(config.sweepMode==='reversal_only' && !reversalSetup && !continuationSetup) allow=false;
+  if(config.h1Mode==='required' && bias.h1Bias==='RANGE') allow=false;
+  const minScore=Math.max(+config.minScore,40);
+  if(!allow) return {status:'NO TRADE', reason:'Insufficient setup quality', decision:scoring, debug:{side,h4:bias.h4Bias,h1:bias.h1Bias,m5PD:m5pd.zone,h1PD:h1pd.zone,sweep:sweep.type,shift:shift.type,fvg:fvg?.type||'NONE',kz:kz.kz}};
+  if(!entry.valid) return {status:scoring.score>=minScore-8?'WAIT':'NO TRADE', reason:'No confirmation', decision:scoring, debug:{side,h4:bias.h4Bias,h1:bias.h1Bias,m5PD:m5pd.zone,h1PD:h1pd.zone,sweep:sweep.type,shift:shift.type,fvg:fvg?.type||'NONE',kz:kz.kz}};
+  if(scoring.score<minScore) return {status:scoring.score>=minScore-8?'FORMING':'NO TRADE', reason:'Score too low', decision:scoring, debug:{side,h4:bias.h4Bias,h1:bias.h1Bias,m5PD:m5pd.zone,h1PD:h1pd.zone,sweep:sweep.type,shift:shift.type,fvg:fvg?.type||'NONE',kz:kz.kz}};
+  return {status:'TRADE', side, decision:scoring, debug:{side,h4:bias.h4Bias,h1:bias.h1Bias,m5PD:m5pd.zone,h1PD:h1pd.zone,sweep:sweep.type,shift:shift.type,fvg:fvg?.type||'NONE',kz:kz.kz}, entry:{entry:entry.entry,candleTime:m1.at(-1).datetime,note:entry.note}, payload:{m5sw, sweep, fvg, shift, atrPad:a*0.6, m1LastClose:m1.at(-1).close}};
+}
+function buildTradePlan(result,minRR=2){
+  if(!result || result.status!=='TRADE') return null; const side=result.side, entry=result.entry.entry, a=Math.max(result.payload.atrPad||5,5);
+  let sl;
+  if(side==='BUY'){const pl=result.payload.m5sw.lastPL?.price; sl=(pl&&pl<entry&&entry-pl<a*6)?pl-a*0.15:entry-a;} else {const ph=result.payload.m5sw.lastPH?.price; sl=(ph&&ph>entry&&ph-entry<a*6)?ph+a*0.15:entry+a;}
+  const risk=Math.abs(entry-sl); if(!risk) return null;
+  const tp1=side==='BUY'?entry+risk:entry-risk, tp2=side==='BUY'?entry+risk*minRR:entry-risk*minRR, tp3=side==='BUY'?entry+risk*3:entry-risk*3;
+  return {time:result.entry.candleTime, side, type:result.entry.note, score:result.decision.score, entry, sl, tp1, tp2, tp3};
+}
+function simulateTrade(m1,plan,startIndex){
+  let sl=plan.sl, tp1Hit=false; for(let i=startIndex+1;i<m1.length;i++){const c=m1[i]; if(plan.side==='BUY'){ if(c.low<=sl) return {exitIndex:i,outcome:tp1Hit?'BREAKEVEN':'LOSS',exitPrice:sl,r:tp1Hit?0:calcR(plan.entry,plan.sl,sl,plan.side)}; if(!tp1Hit&&c.high>=plan.tp1){tp1Hit=true; sl=plan.entry;} if(c.high>=plan.tp3) return {exitIndex:i,outcome:'TP3',exitPrice:plan.tp3,r:calcR(plan.entry,plan.sl,plan.tp3,plan.side)}; if(c.high>=plan.tp2) return {exitIndex:i,outcome:'TP2',exitPrice:plan.tp2,r:calcR(plan.entry,plan.sl,plan.tp2,plan.side)}; } else { if(c.high>=sl) return {exitIndex:i,outcome:tp1Hit?'BREAKEVEN':'LOSS',exitPrice:sl,r:tp1Hit?0:calcR(plan.entry,plan.sl,sl,plan.side)}; if(!tp1Hit&&c.low<=plan.tp1){tp1Hit=true; sl=plan.entry;} if(c.low<=plan.tp3) return {exitIndex:i,outcome:'TP3',exitPrice:plan.tp3,r:calcR(plan.entry,plan.sl,plan.tp3,plan.side)}; if(c.low<=plan.tp2) return {exitIndex:i,outcome:'TP2',exitPrice:plan.tp2,r:calcR(plan.entry,plan.sl,plan.tp2,plan.side)}; }}
+  const last=m1.at(-1); return {exitIndex:m1.length-1,outcome:'OPEN',exitPrice:last.close,r:0};
+}
+function drawEquityCurve(values){const canvas=$('equityCanvas'), ctx=canvas.getContext('2d'), w=canvas.width, h=canvas.height; ctx.clearRect(0,0,w,h); ctx.fillStyle='rgba(255,255,255,.02)'; ctx.fillRect(0,0,w,h); if(!values.length){$('equityNote').textContent='No curve yet.'; return;} const min=Math.min(...values), max=Math.max(...values), span=Math.max(1,max-min); ctx.strokeStyle='rgba(255,255,255,.10)'; for(let i=0;i<5;i++){const y=20+i*((h-40)/4); ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(w-20,y); ctx.stroke();} ctx.beginPath(); values.forEach((v,idx)=>{const x=20+idx*((w-40)/Math.max(1,values.length-1)); const y=h-20-((v-min)/span)*(h-40); if(idx===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);}); ctx.lineWidth=2; ctx.strokeStyle=values.at(-1)>=values[0]?'#3dd68c':'#f56a79'; ctx.stroke(); $('equityNote').textContent=`Points: ${values.length} | Start: $${fmt(values[0])} | End: $${fmt(values.at(-1))} | Peak: $${fmt(Math.max(...values))}`;}
+function renderTrades(trades){const tbody=$('tradeTable').querySelector('tbody'); tbody.innerHTML=''; trades.forEach((t,i)=>{const tr=document.createElement('tr'); const rColor=t.r>0?'color:var(--green)':t.r<0?'color:var(--red)':''; tr.innerHTML=`<td>${i+1}</td><td>${t.time}</td><td style="${t.side==='BUY'?'color:var(--green)':'color:var(--red)'}">${t.side}</td><td>${t.type||'—'}</td><td>${t.score}</td><td>${fmt(t.entry)}</td><td>${fmt(t.sl)}</td><td>${fmt(t.tp2)}</td><td>${t.outcome}</td><td style="${rColor}">${fmt(t.r)}</td>`; tbody.appendChild(tr);});}
+function updateSummary(res){const wins=res.trades.filter(t=>t.r>0), losses=res.trades.filter(t=>t.r<0), bes=res.trades.filter(t=>t.r===0); const netR=res.trades.reduce((a,b)=>a+b.r,0); const grossWin=wins.reduce((a,b)=>a+b.r,0), grossLoss=Math.abs(losses.reduce((a,b)=>a+b.r,0)); const pf=grossLoss>0?grossWin/grossLoss:grossWin>0?999:0; const best=res.trades.length?Math.max(...res.trades.map(t=>t.r)):0; const worst=res.trades.length?Math.min(...res.trades.map(t=>t.r)):0; const avgWin=wins.length?grossWin/wins.length:0; const avgLoss=losses.length?losses.reduce((a,b)=>a+b.r,0)/losses.length:0; const avgScore=res.trades.length?res.trades.reduce((a,b)=>a+(b.score||0),0)/res.trades.length:0; setText('btResult',netR>0?'PROFITABLE':res.trades.length?'NEGATIVE':'WAITING',`big mono ${netR>0?'green':res.trades.length?'red':'gold'}`); setText('btTrades',res.trades.length,'big mono'); setText('btWinRate',res.trades.length?`${fmt((wins.length/res.trades.length)*100,1)}%`:'0%', 'big mono gold'); setText('btNetR',`${fmt(netR)}R`,`big mono ${netR>=0?'green':'red'}`); setText('btDrawdown',`${fmt(res.maxDrawdownR)}R`,'big mono red'); setText('btEquity',`$${fmt(res.finalEquity)}`,'big mono'); setText('btWins',wins.length); setText('btLosses',losses.length); setText('btBE',bes.length); setText('btPF',fmt(pf)); setText('btAvgWin',`${fmt(avgWin)}R`); setText('btAvgLoss',`${fmt(avgLoss)}R`); setText('btBest',`${fmt(best)}R`); setText('btWorst',`${fmt(worst)}R`); setText('diagAvgScore',fmt(avgScore,1)); $('scoreFill').style.width=`${Math.min(100,avgScore)}%`; }
+function exportTrades(){if(!lastTrades.length){status('No trades to export.'); return;} const headers=['time','side','type','score','entry','sl','tp1','tp2','tp3','outcome','r','pnl']; const csv=[headers.join(',')].concat(lastTrades.map(r=>headers.map(h=>`"${String(r[h]??'').replaceAll('"','""')}"`).join(','))).join('\n'); const blob=new Blob([csv],{type:'text/csv'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='tradepro_v12_2_trades.csv'; a.click(); URL.revokeObjectURL(a.href);}
+
+async function runBacktest(){
+  const runBtn=$('runBtn');
+  try{
+    runBtn.disabled=true;
+    const apikey=$('apiKey').value.trim(); if(!apikey) throw new Error('Paste a TwelveData API key first.');
+    const symbol=$('symbol').value, bars=+$('bars').value, mode=$('decisionMode').value, minScore=+$('minScore').value, riskPct=+$('riskPct').value, primeOnly=$('primeOnly').value==='true', fvgLookback=+$('fvgLookback').value, liqLookback=+$('liqLookback').value, minRR=+$('minRR').value, h1Mode=$('h1Mode').value, sweepMode=$('sweepMode').value, kzMode=$('kzMode').value;
+    status(`Loading extended history for ${symbol}...`);
+    const [m1Data,h4Data,h1Data,m5Data]=await Promise.all([
+      fetchSeriesChunked(symbol,'1min',apikey,bars),
+      fetchSeriesChunked(symbol,'4h',apikey,Math.max(220,Math.ceil(bars/240)+120)),
+      fetchSeriesChunked(symbol,'1h',apikey,Math.max(320,Math.ceil(bars/60)+160)),
+      fetchSeriesChunked(symbol,'5min',apikey,Math.max(800,Math.ceil(bars/5)+250))
+    ]);
+    status(`Loaded ${m1Data.length} x 1m bars. Running V12.2...`);
+    const trades=[], eq=[10000], rejectSamples=[], tradeDebug=[], rejectCounts={}, diag={scanned:0,noTrade:0,wait:0,trade:0,buys:0,sells:0,totalScore:0,scoreCount:0};
+    let equity=10000, peak=10000, maxDD=0, i=260;
+    while(i<m1Data.length-10){
+      diag.scanned++;
+      const ts=toTs(m1Data[i].datetime), h4Idx=findLastIndexAtOrBefore(h4Data,ts), h1Idx=findLastIndexAtOrBefore(h1Data,ts), m5Idx=findLastIndexAtOrBefore(m5Data,ts);
+      if(h4Idx<0||h1Idx<0||m5Idx<0){ rejectCounts.align_miss=(rejectCounts.align_miss||0)+1; i++; continue; }
+      const h4=sliceTo(h4Data,h4Idx), h1=sliceTo(h1Data,h1Idx), m5=sliceTo(m5Data,m5Idx), m1=sliceTo(m1Data,i);
+      const pipe=runPipelineV122(h4,h1,m5,m1,{mode,minScore,primeOnly,fvgLookback,liqLookback,h1Mode,sweepMode,kzMode});
+      if(pipe.decision){diag.totalScore+=pipe.decision.score||0; diag.scoreCount++;}
+      if(pipe.status==='NO TRADE'){
+        diag.noTrade++; const key=pipe.reason||'unknown'; rejectCounts[key]=(rejectCounts[key]||0)+1;
+        if(rejectSamples.length<22){rejectSamples.push(`[${m1Data[i].datetime}] NO TRADE | ${pipe.reason||'—'} | score=${pipe.decision?.score??0} | h4=${pipe.debug?.h4||'—'} h1=${pipe.debug?.h1||'—'} | 5mPD=${pipe.debug?.m5PD||'—'} | 1hPD=${pipe.debug?.h1PD||'—'} | sweep=${pipe.debug?.sweep||'—'} | shift=${pipe.debug?.shift||'—'} | fvg=${pipe.debug?.fvg||'—'}`);} i++; continue;
+      }
+      if(pipe.status==='WAIT'||pipe.status==='FORMING'){diag.wait++; i++; continue;}
+      diag.trade++; if(pipe.side==='BUY') diag.buys++; else diag.sells++;
+      const plan=buildTradePlan(pipe,minRR); if(!plan){rejectCounts.plan_fail=(rejectCounts.plan_fail||0)+1; i++; continue;}
+      const sim=simulateTrade(m1Data,plan,i); if(!sim){rejectCounts.sim_fail=(rejectCounts.sim_fail||0)+1; i++; continue;}
+      const riskAmt=equity*(riskPct/100), pnl=riskAmt*sim.r; equity+=pnl; peak=Math.max(peak,equity); maxDD=Math.max(maxDD,(peak-equity)/Math.max(1,riskAmt));
+      const row={...plan,outcome:sim.outcome,r:sim.r,pnl}; trades.push(row); eq.push(equity);
+      if(tradeDebug.length<18){tradeDebug.push(`[${plan.time}] ${plan.side} | ${plan.type} | score=${plan.score} | ${sim.outcome} | R=${fmt(sim.r)} | entry=${fmt(plan.entry)} sl=${fmt(plan.sl)} tp2=${fmt(plan.tp2)}`);}
+      i=Math.max(i+1,sim.exitIndex);
+    }
+    lastTrades=trades; updateSummary({trades,finalEquity:equity,maxDrawdownR:maxDD}); renderTrades(trades); drawEquityCurve(eq);
+    setText('diagScanned',diag.scanned); setText('diagNoTrade',diag.noTrade); setText('diagWait',diag.wait); setText('diagTrade',diag.trade); setText('diagBuys',diag.buys); setText('diagSells',diag.sells); setText('diagMode',mode); setText('diagAvgScore',fmt(diag.scoreCount?diag.totalScore/diag.scoreCount:0,1));
+    const topR=Object.entries(rejectCounts).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>`  ${k}: ${v}`).join('\n')||'  none';
+    $('engineStory').textContent=`V12.2 Extended Backtest Complete\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nSymbol:         ${symbol}\n1m Bars:        ${bars}\n5m Bars:        ${m5Data.length}\n1h Bars:        ${h1Data.length}\n4h Bars:        ${h4Data.length}\nMode:           ${mode}\nMin Score:      ${minScore}\nMin RR:         ${minRR}R\nPrime Only:     ${primeOnly}\nRisk/Trade:     ${riskPct}%\nH1 Mode:        ${h1Mode}\nSweep Mode:     ${sweepMode}\nKillzone:       ${kzMode}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTrades:         ${trades.length}\nAvg Score:      ${fmt(diag.scoreCount?diag.totalScore/diag.scoreCount:0,1)}\nFinal Equity:   $${fmt(equity)}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPATCHES APPLIED:\n✅ chunked 1m loading up to 20000\n✅ adaptive swing sizing by timeframe\n✅ real killzone weighting\n✅ OTE bonus added\n✅ 5m PD required, 1h PD configurable\n✅ reversal vs continuation logic separated\n✅ weighted score rebuilt for context > timing > location\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nTop Rejections:\n${topR}`;
+    $('debugNotes').textContent=['Sample NO TRADE states:',...(rejectSamples.length?rejectSamples:['none']),'','Executed Trades:',...(tradeDebug.length?tradeDebug:['none'])].join('\n');
+    status(`V12.2 complete. Trades: ${trades.length} | Equity: $${fmt(equity)}`);
+  }catch(err){console.error(err); status(err.message||'Backtest failed.');}
+  finally{runBtn.disabled=false;}
+}
+$('saveBtn').addEventListener('click',saveKey); $('runBtn').addEventListener('click',runBacktest); $('exportBtn').addEventListener('click',exportTrades); loadKey();
+</script>
+</body>
+</html>
