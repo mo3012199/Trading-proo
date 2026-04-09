@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a0f17">
+<title>TradePro ICT Engine V12.3 Phase A2.2</title>
+<style>
+:root{
+  --bg:#070b11; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.13);
+  --txt:#e7edf7; --muted:#8e9bb0; --gold:#d9b765; --green:#3dd68c; --red:#f56a79;
+  --shadow:0 16px 42px rgba(0,0,0,.34); --radius:22px;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;padding:0;font-family:Inter,Arial,sans-serif;color:var(--txt);
+  background:
+    radial-gradient(circle at top left, rgba(217,183,101,.08), transparent 22%),
+    radial-gradient(circle at top right, rgba(98,169,255,.08), transparent 20%),
+    linear-gradient(180deg,#06090f,#0a111b 55%,#09111b 100%);
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.018),transparent 26%);z-index:0}
+.app{position:relative;z-index:1;max-width:1560px;margin:0 auto;padding:0 18px 80px}
+.topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--line);backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(7,11,17,.95),rgba(7,11,17,.72))}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800}
+.logo{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#f0d589,#b98b31);box-shadow:0 10px 26px rgba(217,183,101,.2);color:#0a0a08}
+.badge{font:700 11px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--gold);padding:4px 9px;border:1px solid rgba(217,183,101,.22);border-radius:999px;background:rgba(217,183,101,.08)}
+.shell{padding-top:26px}
+.hero{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.card,.config-card,.panel{background:linear-gradient(180deg,rgba(15,23,38,.96),rgba(10,16,28,.94));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.hero .card{padding:16px 18px}
+small.k{display:block;color:var(--muted);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:7px}
+.big{font:800 24px/1.1 Inter,Arial,sans-serif}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.green{color:var(--green)} .red{color:var(--red)} .gold{color:var(--gold)}
+.main{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.config-card,.panel{padding:18px}
+.section-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;margin-bottom:12px;border-bottom:1px solid var(--line)}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{display:block;margin-bottom:6px;color:var(--muted);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+input,select{width:100%;padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid var(--line2);color:var(--txt);outline:none;font-size:14px}
+input:focus,select:focus{border-color:rgba(217,183,101,.5);box-shadow:0 0 0 3px rgba(217,183,101,.1)}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{appearance:none;border:0;cursor:pointer;padding:12px 15px;border-radius:14px;font-weight:800;color:var(--txt);background:rgba(255,255,255,.05);border:1px solid var(--line2)}
+button.primary{color:#120d02;background:linear-gradient(135deg,#f0d589,#c89b40);border:0}
+button[disabled]{opacity:.6;cursor:not-allowed}
+.note{margin-top:12px;padding:12px 13px;border-radius:14px;background:rgba(255,255,255,.025);border:1px solid var(--line);color:var(--muted);font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mini{padding:12px 13px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015));border:1px solid var(--line)}
+.mini b{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:1.45;word-break:break-word}
+.mini small{display:block;color:var(--muted);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.story,.mono-text{white-space:pre-wrap;color:#d7deea;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;font:12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}
+th,td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.8px;background:rgba(255,255,255,.02)}
+tr:last-child td{border-bottom:0}
+.scorebar{height:10px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid var(--line);margin-top:10px}
+.scorebar>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold),var(--green))}
+.footer-note{margin-top:14px;color:var(--muted);font-size:12px}
+@media (max-width:1100px){.hero,.main,.form-grid,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">⚡</div>
+      <div>
+        <div>TradePro ICT Engine</div>
+        <div class="badge">V12.3 · Phase A2.2</div>
+      </div>
+    </div>
+    <div class="badge" id="liveClock">--:--:--</div>
+  </div>
+
+  <div class="shell">
+    <div class="hero">
+      <div class="card"><small class="k">Backtest Result</small><div class="big mono" id="btResult">WAITING</div></div>
+      <div class="card"><small class="k">Total Trades</small><div class="big mono" id="btTrades">0</div></div>
+      <div class="card"><small class="k">Win Rate</small><div class="big mono" id="btWinRate">0%</div></div>
+      <div class="card"><small class="k">Net R</small><div class="big mono" id="btNetR">0.00R</div></div>
+      <div class="card"><small class="k">Max Drawdown</small><div class="big mono" id="btDrawdown">0.00R</div></div>
+      <div class="card"><small class="k">Final Equity</small><div class="big mono" id="btEquity">$0.00</div></div>
+    </div>
+
+    <div class="main">
+      <div>
+        <div class="config-card">
+          <div class="section-head">
+            <div>
+              <div style="font-weight:800">Configuration</div>
+              <div style="font-size:12px;color:var(--muted)">Daily bias → H1 context → 5m setup → 1m entry</div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div><label>TwelveData API Key</label><input id="apiKey" type="password" placeholder="Paste API key"></div>
+            <div><label>Symbol</label>
+              <select id="symbol">
+                <option value="XAU/USD">XAU/USD</option>
+                <option value="EUR/USD">EUR/USD</option>
+                <option value="GBP/USD">GBP/USD</option>
+                <option value="USD/JPY">USD/JPY</option>
+              </select>
+            </div>
+            <div><label>Historical 1m Bars</label>
+              <select id="bars">
+                <option value="1200">1200</option>
+                <option value="1800">1800</option>
+                <option value="2400" selected>2400</option>
+                <option value="5000">5000</option>
+                <option value="10000">10000</option>
+                <option value="15000">15000</option>
+                <option value="20000">20000</option>
+              </select>
+            </div>
+            <div><label>Decision Mode</label>
+              <select id="decisionMode">
+                <option value="FLEXIBLE" selected>FLEXIBLE</option>
+                <option value="STRICT">STRICT</option>
+              </select>
+            </div>
+            <div><label>Minimum Score</label>
+              <select id="minScore">
+                <option value="35">35</option>
+                <option value="40" selected>40</option>
+                <option value="45">45</option>
+                <option value="50">50</option>
+                <option value="55">55</option>
+              </select>
+            </div>
+            <div><label>Risk per Trade</label>
+              <select id="riskPct">
+                <option value="0.5">0.5%</option>
+                <option value="1" selected>1%</option>
+                <option value="2">2%</option>
+              </select>
+            </div>
+            <div><label>Prime Sessions Only</label>
+              <select id="primeOnly">
+                <option value="false" selected>No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div><label>5m FVG Lookback</label>
+              <select id="fvgLookback">
+                <option value="30">30</option>
+                <option value="50" selected>50</option>
+                <option value="80">80</option>
+              </select>
+            </div>
+            <div><label>Liquidity Lookback</label>
+              <select id="liqLookback">
+                <option value="40">40</option>
+                <option value="60" selected>60</option>
+                <option value="90">90</option>
+              </select>
+            </div>
+            <div><label>Min RR Ratio</label>
+              <select id="minRR">
+                <option value="1.5">1.5R</option>
+                <option value="2" selected>2.0R</option>
+                <option value="2.5">2.5R</option>
+              </select>
+            </div>
+          </div>
+          <div class="btns">
+            <button class="primary" id="runBtn">Run Backtest</button>
+            <button id="saveBtn">Save Key</button>
+            <button id="exportBtn">Export CSV</button>
+          </div>
+          <div class="note" id="statusNote">Ready. V12.3 Phase A2.2 loaded with liquidity treated as context first, hard blocks removed for pre-target liquidity, and partial-sweep-aware scoring.</div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Performance</div></div>
+          <div class="grid4">
+            <div class="mini"><small>Wins</small><b id="btWins">0</b></div>
+            <div class="mini"><small>Losses</small><b id="btLosses">0</b></div>
+            <div class="mini"><small>Breakevens</small><b id="btBE">0</b></div>
+            <div class="mini"><small>Profit Factor</small><b id="btPF">0.00</b></div>
+            <div class="mini"><small>Average Win</small><b id="btAvgWin">0.00R</b></div>
+            <div class="mini"><small>Average Loss</small><b id="btAvgLoss">0.00R</b></div>
+            <div class="mini"><small>Best Trade</small><b id="btBest">0.00R</b></div>
+            <div class="mini"><small>Worst Trade</small><b id="btWorst">0.00R</b></div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Diagnostics</div></div>
+          <div class="grid4">
+            <div class="mini"><small>Scanned</small><b id="diagScanned">0</b></div>
+            <div class="mini"><small>No Trade</small><b id="diagNoTrade">0</b></div>
+            <div class="mini"><small>Wait/Forming</small><b id="diagWait">0</b></div>
+            <div class="mini"><small>Trade Signals</small><b id="diagTrade">0</b></div>
+            <div class="mini"><small>Buy Trades</small><b id="diagBuys">0</b></div>
+            <div class="mini"><small>Sell Trades</small><b id="diagSells">0</b></div>
+            <div class="mini"><small>Average Score</small><b id="diagAvgScore">0</b></div>
+            <div class="mini"><small>Mode</small><b id="diagMode">FLEXIBLE</b></div>
+          </div>
+          <div class="scorebar"><span id="scoreFill"></span></div>
+          <div class="footer-note">Score bar: lower = too strict | higher = too loose</div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Engine Notes</div></div>
+          <div class="story" id="engineStory">No run yet.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="section-head"><div style="font-weight:800">Trade Log</div></div>
+          <div class="table-wrap">
+            <table id="tradeTable">
+              <thead>
+                <tr><th>#</th><th>Time</th><th>Side</th><th>Score</th><th>Entry</th><th>SL</th><th>Stop Src</th><th>Setup</th><th>TP2</th><th>Outcome</th><th>R</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Equity Curve</div></div>
+          <canvas id="equityCanvas" width="700" height="260" style="width:100%;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:16px"></canvas>
+          <div class="mono-text" id="equityNote">No curve yet.</div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="section-head"><div style="font-weight:800">Recent Debug</div></div>
+          <div class="story" id="debugNotes">No run yet.</div>
+        </div>
+      </div>
+    </div>
+<script>
+const STORAGE_KEY='tradepro_v12_3_key';
+let lastTrades=[];
+const $=id=>document.getElementById(id);
+
+function setText(id,v,cls=''){const el=$(id);if(!el)return;el.textContent=v??'—';el.className=cls||'';}
+function fmt(n,d=2){return Number.isFinite(Number(n))?Number(n).toFixed(d):'—';}
+function status(msg){$('statusNote').textContent=msg;}
+function saveKey(){localStorage.setItem(STORAGE_KEY,$('apiKey').value.trim());status('API key saved.');}
+function loadKey(){$('apiKey').value=localStorage.getItem(STORAGE_KEY)||'';}
+function updateClock(){$('liveClock').textContent=new Intl.DateTimeFormat('en-CA',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());}
+setInterval(updateClock,1000);updateClock();
+
+async function fetchSeriesChunked(symbol, interval, apikey, wantedBars){
+  const step = 5000;
+  let all = [], endDate = null, loops = 0;
+  while(all.length < wantedBars && loops < 12){
+    const params = new URLSearchParams({
+      symbol, interval, outputsize:String(Math.min(step,wantedBars)), timezone:'UTC', apikey
+    });
+    if(endDate) params.set('end_date', endDate);
+    const res = await fetch('https://api.twelvedata.com/time_series?' + params.toString());
+    const json = await res.json();
+    if(!json.values) throw new Error(json.message||('Failed to fetch '+interval));
+    const batch = json.values.map(r=>({
+      datetime:r.datetime,
+      open:Number(r.open),high:Number(r.high),low:Number(r.low),close:Number(r.close)
+    })).reverse();
+    if(!batch.length) break;
+    const seen = new Set(all.map(x=>x.datetime));
+    const older = batch.filter(x=>!seen.has(x.datetime));
+    all = [...older, ...all].sort((a,b)=>Date.parse(a.datetime.replace(' ','T')+'Z')-Date.parse(b.datetime.replace(' ','T')+'Z'));
+    endDate = batch[0].datetime;
+    loops++;
+    if(batch.length < Math.min(step,wantedBars)) break;
+    await new Promise(r=>setTimeout(r,160));
+  }
+  const dedup=[], seen2=new Set();
+  for(const c of all){ if(!seen2.has(c.datetime)){ seen2.add(c.datetime); dedup.push(c); } }
+  return dedup.slice(-wantedBars);
+}
+
+function atr(data,len=14){
+  if(!Array.isArray(data)||data.length<len+1) return null;
+  let trs=[];
+  for(let i=data.length-len;i<data.length;i++){
+    const c=data[i],p=data[i-1];
+    trs.push(Math.max(c.high-c.low,Math.abs(c.high-p.close),Math.abs(c.low-p.close)));
+  }
+  return trs.reduce((a,b)=>a+b,0)/trs.length;
+}
+function safeNumber(v){return Number.isFinite(Number(v))?Number(v):null;}
+function calcR(entry,sl,exit,direction){
+  const risk=Math.abs(entry-sl);if(!risk||risk<=0) return 0;
+  return direction==='BUY'?(exit-entry)/risk:(entry-exit)/risk;
+}
+function toTimestamp(dt){ return dt ? Date.parse(dt.replace(' ','T')+'Z') : null; }
+function findLastIndexAtOrBefore(arr,targetTs){
+  if(!Array.isArray(arr)||!arr.length||targetTs==null) return -1;
+  let lo=0,hi=arr.length-1,ans=-1;
+  while(lo<=hi){
+    const mid=(lo+hi)>>1;
+    const ts=toTimestamp(arr[mid].datetime);
+    if(ts<=targetTs){ans=mid;lo=mid+1;} else hi=mid-1;
+  }
+  return ans;
+}
+function sliceToIndex(arr,endIdx){return endIdx>=0?arr.slice(0,endIdx+1):[];}
+
+function getSession(dt){
+  const d=new Date(dt.replace(' ','T')+'Z');
+  const h=d.getUTCHours();
+  if(h>=2&&h<5) return 'Asia_KZ';
+  if(h>=7&&h<10) return 'London';
+  if(h>=12&&h<15) return 'New York';
+  if(h>=15&&h<17) return 'NY_PM';
+  return 'Off';
+}
+function isPrimeSession(s){return ['London','New York'].includes(s);}
+function isKillzone(s){return ['Asia_KZ','London','New York'].includes(s);}
+function directionToTrend(direction){return direction==='BUY'?'BULLISH':direction==='SELL'?'BEARISH':'RANGE';}
+function timeDiffMinutes(a,b){
+  const ta=toTimestamp(a), tb=toTimestamp(b);
+  if(ta==null||tb==null) return Infinity;
+  return Math.abs(ta-tb)/60000;
+}
+function roundedKey(v,step=1){
+  const n=Number(v);
+  if(!Number.isFinite(n) || !step) return 'na';
+  return String(Math.round(n/step)*step);
+}
+function buildSetupFingerprint(direction, setupType, payload, session){
+  const anchor = payload?.sweep?.level ?? payload?.ob?.mid ?? payload?.fvg?.mid ?? payload?.m1LastClose ?? 0;
+  const tf = payload?.m1Time || '';
+  const dayKey = tf ? tf.slice(0,10) : 'na';
+  return [direction, setupType||'NONE', session||'NA', dayKey, roundedKey(anchor,15)].join('|');
+}
+function isDuplicateTradeCandidate(plan, state){
+  if(!plan || !state?.lastTrade) return false;
+  const last=state.lastTrade;
+  const mins=timeDiffMinutes(plan.time,last.time);
+  const priceGap=Math.abs((plan.entry||0)-(last.entry||0));
+  const sameDirection=plan.direction===last.direction;
+  const sameFingerprint=plan.setupKey && last.setupKey && plan.setupKey===last.setupKey;
+  const riskRef=Math.max(plan.stopDistance||0,last.stopDistance||0,1);
+  const tooClosePrice=priceGap<=riskRef*0.75;
+  if(sameFingerprint && mins<=180) return true;
+  if(sameDirection && mins<=12 && tooClosePrice) return true;
+  return false;
+}
+
+function shouldRejectStaleSetup(plan, setupUsage, marketState, h1Analysis){
+  const prev = setupUsage.get(plan.setupKey);
+  if(!prev) return false;
+  const mins = timeDiffMinutes(plan.time, prev.time);
+  if(mins <= 180) return true;
+  if(plan.setupType==='CONTINUATION' && mins <= 360 && h1Analysis?.state!=='TRANSITION') return true;
+  if(marketState?.state==='RANGE' && mins <= 480) return true;
+  return false;
+}
+
+function buildSwings(candles,left=3,right=3){
+  if(!candles||candles.length<left+right+5) return {highs:[],lows:[],trend:'RANGE',lastPH:null,lastPL:null,prevPH:null,prevPL:null};
+  const highs=[],lows=[];
+  for(let i=left;i<candles.length-right;i++){
+    let isPH=true,isPL=true;
+    for(let j=i-left;j<=i+right;j++){
+      if(j===i) continue;
+      if(candles[j].high>=candles[i].high) isPH=false;
+      if(candles[j].low<=candles[i].low) isPL=false;
+    }
+    if(isPH) highs.push({price:candles[i].high,index:i,time:candles[i].datetime});
+    if(isPL) lows.push({price:candles[i].low,index:i,time:candles[i].datetime});
+  }
+  const lastPH=highs.at(-1)||null,prevPH=highs.at(-2)||null;
+  const lastPL=lows.at(-1)||null,prevPL=lows.at(-2)||null;
+  const tol=(atr(candles,14)||0)*0.1;
+  let trend='RANGE';
+  if(lastPH&&prevPH&&lastPL&&prevPL){
+    const HH=lastPH.price>prevPH.price+tol,HL=lastPL.price>prevPL.price+tol;
+    const LH=lastPH.price<prevPH.price-tol,LL=lastPL.price<prevPL.price-tol;
+    if(HH&&HL) trend='BULLISH';
+    else if(LH&&LL) trend='BEARISH';
+  }
+  return {highs,lows,trend,lastPH,lastPL,prevPH,prevPL,tol};
+}
+function buildDealingRangeState(candles, swings){
+  const close=candles.at(-1)?.close;
+  const a=atr(candles,14)||1;
+  if(!close) return {zone:'UNKNOWN',eq:null,q25:null,q75:null,rangeHigh:null,rangeLow:null,width:0,widthATR:0,anchorMode:'NONE',confidence:'LOW',explain:'NO_CLOSE'};
+  let high=null, low=null, anchorMode='ROLLING_WINDOW';
+  if(swings?.lastPH && swings?.lastPL){
+    high=swings.lastPH.price;
+    low=swings.lastPL.price;
+    anchorMode='STRUCTURE_ANCHORS';
+  } else {
+    const sl=candles.slice(-40);
+    if(sl.length){
+      high=Math.max(...sl.map(c=>c.high));
+      low=Math.min(...sl.map(c=>c.low));
+    }
+  }
+  if(!Number.isFinite(high) || !Number.isFinite(low) || high<=low){
+    return {zone:'UNKNOWN',eq:null,q25:null,q75:null,rangeHigh:high,rangeLow:low,width:0,widthATR:0,anchorMode:'INVALID',confidence:'LOW',explain:'DEGENERATE_RANGE'};
+  }
+  const width=high-low;
+  const widthATR=width/Math.max(a,1e-7);
+  if(widthATR<1.4){
+    return {zone:'UNKNOWN',eq:(high+low)/2,q25:low+width*0.25,q75:low+width*0.75,rangeHigh:high,rangeLow:low,width,widthATR,anchorMode,confidence:'LOW',explain:'RANGE_TOO_TIGHT'};
+  }
+  const eq=(high+low)/2;
+  const q25=low+width*0.25;
+  const q75=low+width*0.75;
+  const eqBand = width*0.05;
+  let zone='EQ';
+  if(close <= q25) zone='DEEP_DISCOUNT';
+  else if(close < eq - eqBand) zone='DISCOUNT';
+  else if(close >= q75) zone='DEEP_PREMIUM';
+  else if(close > eq + eqBand) zone='PREMIUM';
+  const confidence = anchorMode==='STRUCTURE_ANCHORS' ? 'HIGH' : 'MEDIUM';
+  return {zone,eq,q25,q75,rangeHigh:high,rangeLow:low,width,widthATR,anchorMode,confidence,explain:`${anchorMode}_${zone}`};
+}
+function getPDRange(candles,swings){
+  return buildDealingRangeState(candles,swings);
+}
+function getDirectionalEligibility(drState,direction){
+  if(!drState || drState.zone==='UNKNOWN') return {status:'WARN', reason:'DR_UNKNOWN', soft:true};
+  if(direction==='BUY'){
+    if(['DISCOUNT','DEEP_DISCOUNT'].includes(drState.zone)) return {status:'PASS', reason:'BUY_IN_DISCOUNT', soft:false};
+    if(drState.zone==='EQ') return {status:'WARN', reason:'BUY_AT_EQ', soft:true};
+    if(drState.zone==='PREMIUM') return {status:'WARN', reason:'BUY_IN_PREMIUM', soft:true};
+    return {status:'BLOCK', reason:'BUY_IN_DEEP_PREMIUM', soft:false};
+  }
+  if(direction==='SELL'){
+    if(['PREMIUM','DEEP_PREMIUM'].includes(drState.zone)) return {status:'PASS', reason:'SELL_IN_PREMIUM', soft:false};
+    if(drState.zone==='EQ') return {status:'WARN', reason:'SELL_AT_EQ', soft:true};
+    if(drState.zone==='DISCOUNT') return {status:'WARN', reason:'SELL_IN_DISCOUNT', soft:true};
+    return {status:'BLOCK', reason:'SELL_IN_DEEP_DISCOUNT', soft:false};
+  }
+  return {status:'BLOCK', reason:'NO_DIRECTION', soft:false};
+}
+function isValidPDForDirection(zone,direction){
+  const gate=getDirectionalEligibility({zone},direction);
+  return gate.status==='PASS';
+}
+function buildLiquidityMap(h1Candles,m5Candles,currentPrice,session){
+  const map={levels:[], above:[], below:[], majorAbove:[], majorBelow:[], nearestAbove:null, nearestBelow:null, currentPrice, atr5:atr(m5Candles,14)||1};
+  const pushLevel=(type,price,tf,isMajor,evidence,status='UNTOUCHED',touchCount=0)=>{
+    if(!Number.isFinite(price)) return;
+    const side=price>currentPrice?'BSL':price<currentPrice?'SSL':'AT_PRICE';
+    const level={levelId:`${type}_${tf}_${price.toFixed(3)}`,type,price,tf,side,isMajor,status,touchCount,evidence,importanceScore:(isMajor?70:40)+(touchCount*5)};
+    map.levels.push(level);
+  };
+  const h1Sw=buildSwings(h1Candles,3,3);
+  if(h1Sw.lastPH) pushLevel('H1_PH',h1Sw.lastPH.price,'H1',true,'external_high');
+  if(h1Sw.lastPL) pushLevel('H1_PL',h1Sw.lastPL.price,'H1',true,'external_low');
+  const dailyBias=detectDailyLiquidityBias(h1Candles);
+  pushLevel('PDH', dailyBias.PDH, 'D', true, 'previous_day_high');
+  pushLevel('PDL', dailyBias.PDL, 'D', true, 'previous_day_low');
+  pushLevel('ARH', dailyBias.ARH, 'D', session==='London' || session==='New York', 'asia_range_high');
+  pushLevel('ARL', dailyBias.ARL, 'D', session==='London' || session==='New York', 'asia_range_low');
+  const eq=detectEqualLevels(m5Candles,80);
+  eq.eqHighs.slice(-4).forEach((x,idx)=>pushLevel('EQH',x.level,'M5',true,'equal_highs','UNTOUCHED',2+idx));
+  eq.eqLows.slice(-4).forEach((x,idx)=>pushLevel('EQL',x.level,'M5',true,'equal_lows','UNTOUCHED',2+idx));
+  const pivots=detectSwingPivots(m5Candles,60,2,2);
+  pivots.filter(p=>p.type==='PH').slice(-4).forEach(p=>pushLevel('M5_PH',p.price,'M5',false,'internal_high'));
+  pivots.filter(p=>p.type==='PL').slice(-4).forEach(p=>pushLevel('M5_PL',p.price,'M5',false,'internal_low'));
+  const recent=m5Candles.slice(-30);
+  for(const level of map.levels){
+    if(level.side==='BSL'){
+      const took = recent.some(c=>c.high > level.price);
+      const touched = recent.some(c=>c.high >= level.price);
+      level.status = took ? 'SWEPT' : touched ? 'TOUCHED' : 'UNTOUCHED';
+    } else if(level.side==='SSL'){
+      const took = recent.some(c=>c.low < level.price);
+      const touched = recent.some(c=>c.low <= level.price);
+      level.status = took ? 'SWEPT' : touched ? 'TOUCHED' : 'UNTOUCHED';
+    } else {
+      level.status='TOUCHED';
+    }
+  }
+  map.above = map.levels.filter(l=>l.side==='BSL').sort((a,b)=>a.price-b.price);
+  map.below = map.levels.filter(l=>l.side==='SSL').sort((a,b)=>b.price-a.price);
+  map.majorAbove = map.above.filter(l=>l.isMajor && l.status!=='SWEPT');
+  map.majorBelow = map.below.filter(l=>l.isMajor && l.status!=='SWEPT');
+  map.nearestAbove = map.above[0] || null;
+  map.nearestBelow = map.below[0] || null;
+  map.targetSide = map.majorAbove.length && map.majorBelow.length
+    ? ((map.majorAbove[0].price-currentPrice) <= (currentPrice-map.majorBelow[0].price) ? 'BSL' : 'SSL')
+    : map.majorAbove.length ? 'BSL' : map.majorBelow.length ? 'SSL' : 'NONE';
+  map.explain = `ABOVE:${map.majorAbove.length}|BELOW:${map.majorBelow.length}|TARGET:${map.targetSide}`;
+  return map;
+}
+function getLiquidityAlignment(direction, liquidityMap){
+  const aboveUntouched = liquidityMap.majorAbove.some(l=>l.status==='UNTOUCHED');
+  const belowUntouched = liquidityMap.majorBelow.some(l=>l.status==='UNTOUCHED');
+  const atr5 = liquidityMap.atr5 || 1;
+  const nearestAboveDist = liquidityMap.nearestAbove ? Math.abs(liquidityMap.nearestAbove.price - liquidityMap.currentPrice) / Math.max(atr5,1e-7) : Infinity;
+  const nearestBelowDist = liquidityMap.nearestBelow ? Math.abs(liquidityMap.currentPrice - liquidityMap.nearestBelow.price) / Math.max(atr5,1e-7) : Infinity;
+
+  // Phase A2.4:
+  // - strong liquidity only (majorAbove/majorBelow)
+  // - opposite liquidity gives warning / threshold bump, not auto-block by itself
+  // - natural target alignment gives boost
+  if(direction==='BUY'){
+    if(!aboveUntouched && !liquidityMap.nearestAbove) return {status:'BLOCK', reason:'NO_LIQUIDITY_TARGET', soft:false, penalty:0, thresholdBump:0, boost:0};
+
+    if(liquidityMap.targetSide==='SSL' && belowUntouched){
+      if(nearestBelowDist <= 0.30) return {status:'WARN', reason:'BUY_BEFORE_SSL_COMPLETION_EXTREME', soft:true, penalty:5, thresholdBump:3, boost:0};
+      if(nearestBelowDist <= 0.85) return {status:'WARN', reason:'BUY_BEFORE_SSL_COMPLETION_NEAR', soft:true, penalty:3, thresholdBump:2, boost:0};
+      if(nearestBelowDist <= 1.60) return {status:'WARN', reason:'BUY_BEFORE_SSL_COMPLETION_MID', soft:true, penalty:1, thresholdBump:1, boost:0};
+    }
+
+    if(liquidityMap.targetSide==='BSL'){
+      if(nearestAboveDist <= 0.9) return {status:'PASS', reason:'BUY_TOWARD_NEAR_BSL', soft:false, penalty:0, thresholdBump:0, boost:3};
+      if(nearestAboveDist <= 2.2) return {status:'PASS', reason:'BUY_TOWARD_BSL', soft:false, penalty:0, thresholdBump:0, boost:2};
+      return {status:'PASS', reason:'BUY_TOWARD_FAR_BSL', soft:false, penalty:0, thresholdBump:0, boost:1};
+    }
+    return {status:'PASS', reason:'BUY_CONTEXT_OK', soft:false, penalty:0, thresholdBump:0, boost:0};
+  }
+
+  if(direction==='SELL'){
+    if(!belowUntouched && !liquidityMap.nearestBelow) return {status:'BLOCK', reason:'NO_LIQUIDITY_TARGET', soft:false, penalty:0, thresholdBump:0, boost:0};
+
+    if(liquidityMap.targetSide==='BSL' && aboveUntouched){
+      if(nearestAboveDist <= 0.30) return {status:'WARN', reason:'SELL_BEFORE_BSL_COMPLETION_EXTREME', soft:true, penalty:5, thresholdBump:3, boost:0};
+      if(nearestAboveDist <= 0.85) return {status:'WARN', reason:'SELL_BEFORE_BSL_COMPLETION_NEAR', soft:true, penalty:3, thresholdBump:2, boost:0};
+      if(nearestAboveDist <= 1.60) return {status:'WARN', reason:'SELL_BEFORE_BSL_COMPLETION_MID', soft:true, penalty:1, thresholdBump:1, boost:0};
+    }
+
+    if(liquidityMap.targetSide==='SSL'){
+      if(nearestBelowDist <= 0.9) return {status:'PASS', reason:'SELL_TOWARD_NEAR_SSL', soft:false, penalty:0, thresholdBump:0, boost:3};
+      if(nearestBelowDist <= 2.2) return {status:'PASS', reason:'SELL_TOWARD_SSL', soft:false, penalty:0, thresholdBump:0, boost:2};
+      return {status:'PASS', reason:'SELL_TOWARD_FAR_SSL', soft:false, penalty:0, thresholdBump:0, boost:1};
+    }
+    return {status:'PASS', reason:'SELL_CONTEXT_OK', soft:false, penalty:0, thresholdBump:0, boost:0};
+  }
+
+  return {status:'BLOCK', reason:'NO_DIRECTION', soft:false, penalty:0, thresholdBump:0, boost:0};
+}
+function evaluateInducement(direction, liquidityMap, sweep, shift, disp, marketState){
+  const aboveUntouched = liquidityMap.majorAbove.some(l=>l.status==='UNTOUCHED');
+  const belowUntouched = liquidityMap.majorBelow.some(l=>l.status==='UNTOUCHED');
+  const weakSweep = !sweep?.swept || sweep?.quality==='LOW';
+  const weakDisplacement = !disp?.valid;
+  const weakShift = !shift?.valid;
+  const atr5 = liquidityMap.atr5 || 1;
+  const nearestAboveDist = liquidityMap.nearestAbove ? Math.abs(liquidityMap.nearestAbove.price - liquidityMap.currentPrice) / Math.max(atr5,1e-7) : Infinity;
+  const nearestBelowDist = liquidityMap.nearestBelow ? Math.abs(liquidityMap.currentPrice - liquidityMap.nearestBelow.price) / Math.max(atr5,1e-7) : Infinity;
+  const partialSweepOk = sweep?.swept && (sweep?.quality==='MEDIUM' || sweep?.quality==='HIGH');
+  const weakCount = Number(weakSweep) + Number(weakDisplacement) + Number(weakShift);
+  const weakSetup = weakCount >= 2;
+  const strongSetup = (partialSweepOk && !weakDisplacement) || (partialSweepOk && !weakShift) || (!weakDisplacement && !weakShift);
+
+  // Phase A2.4 conditional gate:
+  // against liquidity + weak setup => BLOCK
+  // against liquidity + strong setup => ALLOW with penalty
+  if(direction==='SELL' && aboveUntouched){
+    if(nearestAboveDist <= 0.45 && weakSetup){
+      return {status:'BLOCK', reason:'MAJOR_BSL_UNTOUCHED_WEAK_SETUP', penalty:5, thresholdBump:3, explain:'Strong opposite buyside liquidity is very close and setup quality is weak.'};
+    }
+    if(nearestAboveDist <= 1.0 && !strongSetup){
+      return {status:'WARN', reason:'MAJOR_BSL_UNTOUCHED', penalty:2, thresholdBump:1, explain:'Opposite buyside liquidity nearby; continue only with decent confirmation.'};
+    }
+  }
+
+  if(direction==='BUY' && belowUntouched){
+    if(nearestBelowDist <= 0.45 && weakSetup){
+      return {status:'BLOCK', reason:'MAJOR_SSL_UNTOUCHED_WEAK_SETUP', penalty:5, thresholdBump:3, explain:'Strong opposite sellside liquidity is very close and setup quality is weak.'};
+    }
+    if(nearestBelowDist <= 1.0 && !strongSetup){
+      return {status:'WARN', reason:'MAJOR_SSL_UNTOUCHED', penalty:2, thresholdBump:1, explain:'Opposite sellside liquidity nearby; continue only with decent confirmation.'};
+    }
+  }
+
+  if((marketState?.state==='RANGE' || marketState?.reason==='CHOPPY_M5') && (!shift?.valid || weakDisplacement)){
+    return {status:'WARN', reason:'CHOP_TRAP_RISK', penalty:2, thresholdBump:1, explain:'Range environment with incomplete confirmation.'};
+  }
+  if(sweep?.swept && weakDisplacement && !partialSweepOk){
+    return {status:'WARN', reason:'SWEEP_WITHOUT_DISPLACEMENT', penalty:1, thresholdBump:1, explain:'Sweep occurred without convincing displacement.'};
+  }
+  return {status:'PASS', reason:'NO_INDUCEMENT', penalty:0, thresholdBump:0, explain:'Sweep and liquidity context are aligned.'};
+}
+
+function detectSwingPivots(candles,lookback=60,left=2,right=2){
+  const slice=candles.slice(-lookback);
+  const pivots=[];
+  for(let i=left;i<slice.length-right;i++){
+    let isPH=true,isPL=true;
+    for(let j=i-left;j<=i+right;j++){
+      if(j===i) continue;
+      if(slice[j].high>=slice[i].high) isPH=false;
+      if(slice[j].low<=slice[i].low) isPL=false;
+    }
+    if(isPH) pivots.push({type:'PH',price:slice[i].high,time:slice[i].datetime});
+    if(isPL) pivots.push({type:'PL',price:slice[i].low,time:slice[i].datetime});
+  }
+  return pivots;
+}
+function detectSweep(candles,direction,atrVal,liqLookback=80){
+  const pivots=detectSwingPivots(candles,liqLookback,2,2);
+  const last=candles.at(-1);
+  const tol=Math.max(atrVal*0.15,1.0);
+  if(direction==='BUY'){
+    const swingLows=pivots.filter(p=>p.type==='PL').slice(-6);
+    for(const pl of swingLows){
+      for(let i=candles.length-4;i<candles.length;i++){
+        if(i<0) continue;
+        const c=candles[i];
+        if(c.low<pl.price-tol && c.close>pl.price) return {swept:true,level:pl.price,type:'SSL_SWEEP',quality:'HIGH'};
+      }
+      if(last.low<pl.price && last.close>pl.price-tol*2) return {swept:true,level:pl.price,type:'SSL_SWEEP',quality:'MEDIUM'};
+    }
+  }
+  if(direction==='SELL'){
+    const swingHighs=pivots.filter(p=>p.type==='PH').slice(-6);
+    for(const ph of swingHighs){
+      for(let i=candles.length-4;i<candles.length;i++){
+        if(i<0) continue;
+        const c=candles[i];
+        if(c.high>ph.price+tol && c.close<ph.price) return {swept:true,level:ph.price,type:'BSL_SWEEP',quality:'HIGH'};
+      }
+      if(last.high>ph.price && last.close<ph.price+tol*2) return {swept:true,level:ph.price,type:'BSL_SWEEP',quality:'MEDIUM'};
+    }
+  }
+  return {swept:false,level:null,type:'NONE',quality:'LOW'};
+}
+
+function detectRefinedFVG(candles,direction,lookback=50){
+  const fvgs=[];
+  const start=Math.max(2,candles.length-lookback);
+  const a=atr(candles,14)||0;
+  const currentPrice=candles.at(-1)?.close;
+  for(let i=start;i<candles.length-1;i++){
+    const c1=candles[i-2],c2=candles[i-1],c3=candles[i];
+    const range=Math.max(c2.high-c2.low,1e-7);
+    const body=Math.abs(c2.close-c2.open);
+    const bodyRatio=body/range;
+    const impulse=bodyRatio>=0.45||range>=a*0.7;
+    if(direction==='BUY'&&c3.low>c1.high&&impulse){
+      const gap=c3.low-c1.high;
+      if(gap>0) fvgs.push({type:'BFVG',top:c3.low,bottom:c1.high,mid:(c3.low+c1.high)/2,ce:(c3.low+c1.high)/2,size:gap,quality:gap>=a*0.05?'HIGH':'MEDIUM',index:i});
+    }
+    if(direction==='SELL'&&c3.high<c1.low&&impulse){
+      const gap=c1.low-c3.high;
+      if(gap>0) fvgs.push({type:'SFVG',top:c1.low,bottom:c3.high,mid:(c1.low+c3.high)/2,ce:(c1.low+c3.high)/2,size:gap,quality:gap>=a*0.05?'HIGH':'MEDIUM',index:i});
+    }
+  }
+  const active=[];
+  for(const fvg of fvgs){
+    const later=candles.slice(fvg.index+1);
+    let filled=false, touched=false, enteredDeep=false, rejectFromCE=false;
+    for(const c of later){
+      if(fvg.type==='BFVG'){
+        if(c.low<=fvg.top) touched=true;
+        if(c.low<=fvg.mid) enteredDeep=true;
+        if(c.low<=fvg.mid && c.close>fvg.mid) rejectFromCE=true;
+        if(c.low<fvg.bottom) filled=true;
+      }else{
+        if(c.high>=fvg.bottom) touched=true;
+        if(c.high>=fvg.mid) enteredDeep=true;
+        if(c.high>=fvg.mid && c.close<fvg.mid) rejectFromCE=true;
+        if(c.high>fvg.top) filled=true;
+      }
+    }
+    if(!filled) active.push({...fvg,touched,enteredDeep,rejectFromCE,filled:false});
+  }
+  if(!active.length) return null;
+  active.sort((a,b)=>Math.abs(currentPrice-a.mid)-Math.abs(currentPrice-b.mid));
+  return active[0];
+}
+
+function detectDisplacement(candles,direction){
+  if(!candles||candles.length<10) return {valid:false,score:0};
+  const a=atr(candles,14)||0;
+  for(let k=candles.length-4;k<candles.length-1;k++){
+    if(k<0) continue;
+    const c=candles[k], range=c.high-c.low, body=Math.abs(c.close-c.open), bodyRatio=body/Math.max(range,1e-7);
+    const isBull=c.close>c.open, isBear=c.close<c.open, atrRatio=a>0?range/a:0;
+    if(direction==='BUY'&&isBull&&bodyRatio>=0.55&&atrRatio>=0.8) return {valid:true,score:Math.round(bodyRatio*60+atrRatio*25)};
+    if(direction==='SELL'&&isBear&&bodyRatio>=0.55&&atrRatio>=0.8) return {valid:true,score:Math.round(bodyRatio*60+atrRatio*25)};
+  }
+  return {valid:false,score:0};
+}
+
+function detect5mShift(candles,direction,swings){
+  if(!candles||candles.length<5) return {valid:false,type:'NONE',strength:'LOW',brokenLevel:null};
+  const last=candles.at(-1), body=Math.abs(last.close-last.open), range=Math.max(last.high-last.low,1e-7), bodyRatio=body/range;
+  const displaced=bodyRatio>=0.5;
+  if(direction==='BUY'){
+    if(swings.lastPH&&last.close>swings.lastPH.price&&displaced) return {valid:true,type:'BOS',strength:'HIGH',brokenLevel:swings.lastPH.price};
+    if(swings.prevPH&&last.close>swings.prevPH.price&&displaced) return {valid:true,type:'CHOCH',strength:'MEDIUM',brokenLevel:swings.prevPH.price};
+    const recentHigh=Math.max(...candles.slice(-5,-1).map(c=>c.high));
+    if(last.close>recentHigh&&last.close>last.open) return {valid:true,type:'MICRO_SHIFT',strength:'LOW',brokenLevel:recentHigh};
+  } else {
+    if(swings.lastPL&&last.close<swings.lastPL.price&&displaced) return {valid:true,type:'BOS',strength:'HIGH',brokenLevel:swings.lastPL.price};
+    if(swings.prevPL&&last.close<swings.prevPL.price&&displaced) return {valid:true,type:'CHOCH',strength:'MEDIUM',brokenLevel:swings.prevPL.price};
+    const recentLow=Math.min(...candles.slice(-5,-1).map(c=>c.low));
+    if(last.close<recentLow&&last.close<last.open) return {valid:true,type:'MICRO_SHIFT',strength:'LOW',brokenLevel:recentLow};
+  }
+  return {valid:false,type:'NONE',strength:'LOW',brokenLevel:null};
+}
+
+function detectRefinedOrderBlock(candles,direction){
+  if(!candles || candles.length<10) return null;
+  const a=atr(candles,14)||1;
+  for(let i=Math.max(1,candles.length-18); i<candles.length-3; i++){
+    const c=candles[i];
+    const next=candles.slice(i+1,i+4);
+    if(next.length<3) continue;
+    const nextHigh=Math.max(...next.map(x=>x.high));
+    const nextLow=Math.min(...next.map(x=>x.low));
+    const move=direction==='BUY' ? nextHigh-c.high : c.low-nextLow;
+    const displacement = move > a*1.25;
+    const body = Math.abs(c.close-c.open);
+    const range = Math.max(c.high-c.low,1e-7);
+    const candleBalanced = body/range > 0.2;
+    if(direction==='BUY' && c.close<c.open && displacement && candleBalanced){
+      return {type:'BULL_OB', top:c.high, bottom:c.low, mid:(c.high+c.low)/2, quality:move>a*1.8?'HIGH':'MEDIUM'};
+    }
+    if(direction==='SELL' && c.close>c.open && displacement && candleBalanced){
+      return {type:'BEAR_OB', top:c.high, bottom:c.low, mid:(c.high+c.low)/2, quality:move>a*1.8?'HIGH':'MEDIUM'};
+    }
+  }
+  return null;
+}
+
+function detectDailyLiquidityBias(h1Candles){
+  const weak = {state:'WEAK',reason:'INSUFFICIENT_DATA',strength:'LOW',tookBSL:false,tookSSL:false,sweepAsianHigh:false,sweepAsianLow:false,bearContext:false,bullContext:false,eqhSweep:false,eqlSweep:false};
+  if(!h1Candles || h1Candles.length<96) return weak;
+
+  const todayBars=h1Candles.slice(-24);
+  const yesterdayBars=h1Candles.slice(-48,-24);
+  const twoDaysAgo=h1Candles.slice(-72,-48);
+  if(yesterdayBars.length<24 || twoDaysAgo.length<24) return weak;
+
+  const PDH=Math.max(...yesterdayBars.map(c=>c.high));
+  const PDL=Math.min(...yesterdayBars.map(c=>c.low));
+  const PDH2=Math.max(...twoDaysAgo.map(c=>c.high));
+  const PDL2=Math.min(...twoDaysAgo.map(c=>c.low));
+
+  const asianBars=todayBars.filter(c=>{
+    const h=new Date(c.datetime.replace(' ','T')+'Z').getUTCHours();
+    return h>=0 && h<5;
+  });
+  const ARH=asianBars.length?Math.max(...asianBars.map(c=>c.high)):null;
+  const ARL=asianBars.length?Math.min(...asianBars.map(c=>c.low)):null;
+
+  const currentHigh=Math.max(...todayBars.map(c=>c.high));
+  const currentLow=Math.min(...todayBars.map(c=>c.low));
+  const currentClose=todayBars.at(-1)?.close;
+
+  const tookBSL=currentHigh>PDH;
+  const tookSSL=currentLow<PDL;
+  const sweepAsianHigh=ARH!=null && currentHigh>ARH;
+  const sweepAsianLow=ARL!=null && currentLow<ARL;
+
+  const bearContext=PDH<PDH2 && PDL<PDL2;
+  const bullContext=PDH>PDH2 && PDL>PDL2;
+
+  const eq = detectEqualLevels(h1Candles, 80);
+  const eqhTop = eq.eqHighs.length ? Math.max(...eq.eqHighs.map(x=>x.level)) : null;
+  const eqlBot = eq.eqLows.length ? Math.min(...eq.eqLows.map(x=>x.level)) : null;
+  const eqhSweep = eqhTop!=null && currentHigh>eqhTop;
+  const eqlSweep = eqlBot!=null && currentLow<eqlBot;
+
+  let state='WEAK', reason='NO_CLEAR_SWEEP', strength='LOW';
+
+  if((tookBSL || eqhSweep) && (sweepAsianHigh || eqhSweep) && !(tookSSL || eqlSweep)){
+    state='SELL'; reason=(tookBSL&&sweepAsianHigh)?'PDH_AND_ARH_SWEPT':'EQH_SWEPT'; strength='HIGH';
+  } else if((tookSSL || eqlSweep) && (sweepAsianLow || eqlSweep) && !(tookBSL || eqhSweep)){
+    state='BUY'; reason=(tookSSL&&sweepAsianLow)?'PDL_AND_ARL_SWEPT':'EQL_SWEPT'; strength='HIGH';
+  } else if(tookBSL || eqhSweep){
+    state='SELL';
+    reason=tookBSL ? 'PDH_SWEPT' : 'EQH_SWEPT';
+    strength=(bearContext || sweepAsianHigh)?'HIGH':'MEDIUM';
+  } else if(tookSSL || eqlSweep){
+    state='BUY';
+    reason=tookSSL ? 'PDL_SWEPT' : 'EQL_SWEPT';
+    strength=(bullContext || sweepAsianLow)?'HIGH':'MEDIUM';
+  } else if(sweepAsianHigh && !sweepAsianLow){
+    state='SELL'; reason='ARH_SWEPT'; strength=bearContext?'MEDIUM':'LOW';
+  } else if(sweepAsianLow && !sweepAsianHigh){
+    state='BUY'; reason='ARL_SWEPT'; strength=bullContext?'MEDIUM':'LOW';
+  } else {
+    const dayRange=Math.max(PDH-PDL,1e-7);
+    const belowUpper = currentClose < PDH - dayRange*0.25;
+    const aboveLower = currentClose > PDL + dayRange*0.25;
+    if(bearContext && belowUpper){ state='SELL'; reason='INSIDE_BEAR_CONTEXT'; strength='LOW'; }
+    else if(bullContext && aboveLower){ state='BUY'; reason='INSIDE_BULL_CONTEXT'; strength='LOW'; }
+    else if(bearContext){ state='NEUTRAL'; reason='BEAR_CONTEXT_ONLY'; strength='LOW'; }
+    else if(bullContext){ state='NEUTRAL'; reason='BULL_CONTEXT_ONLY'; strength='LOW'; }
+  }
+
+  return {state,reason,strength,PDH,PDL,ARH,ARL,tookBSL,tookSSL,sweepAsianHigh,sweepAsianLow,bearContext,bullContext,currentHigh,currentLow,currentClose,eqhSweep,eqlSweep,eqhTop,eqlBot};
+}
+
+function analyzeH1Structure(h1Candles){
+  const swings=buildSwings(h1Candles,3,3);
+  const pd=getPDRange(h1Candles,swings);
+  const last=h1Candles.at(-1), prev=h1Candles.at(-2);
+  let state='RANGE', lastShift='NONE';
+  if(swings.trend==='BULLISH' || swings.trend==='BEARISH') state='TREND';
+  if(swings.trend==='RANGE') state='RANGE';
+  if(last && prev){
+    if(swings.lastPH && last.close>swings.lastPH.price && prev.close<=swings.lastPH.price) lastShift='BOS';
+    else if(swings.lastPL && last.close<swings.lastPL.price && prev.close>=swings.lastPL.price) lastShift='BOS';
+    else if((swings.prevPH && last.close>swings.prevPH.price)||(swings.prevPL && last.close<swings.prevPL.price)) lastShift='CHOCH';
+  }
+  if(swings.trend==='RANGE' && lastShift!=='NONE') state='TRANSITION';
+  return {
+    trend:swings.trend,
+    state,
+    lastShift,
+    rangeHigh:pd.rangeHigh,
+    rangeLow:pd.rangeLow,
+    protectedHigh:swings.lastPH?.price ?? null,
+    protectedLow:swings.lastPL?.price ?? null,
+    pdZone:pd.zone,
+    swings
+  };
+}
+
+function detectChopAndExtension(m5Candles, lookback=24){
+  if(!m5Candles || m5Candles.length<lookback+2) return {blocked:false,chop:false,overextended:false,compressionRatio:99,extensionRatio:0,reason:'NORMAL'};
+  const slice=m5Candles.slice(-lookback);
+  const high=Math.max(...slice.map(c=>c.high));
+  const low=Math.min(...slice.map(c=>c.low));
+  const a=atr(m5Candles,14)||1;
+  const compressionRatio=(high-low)/Math.max(a,1e-7);
+  const recentClose=slice.at(-1).close;
+  const mean=slice.reduce((x,c)=>x+c.close,0)/slice.length;
+  const extensionRatio=Math.abs(recentClose-mean)/Math.max(a,1e-7);
+  if(compressionRatio<2.2) return {blocked:true,chop:true,overextended:false,compressionRatio,extensionRatio,reason:'RANGE_TOO_TIGHT'};
+  if(extensionRatio>4.2) return {blocked:true,chop:false,overextended:true,compressionRatio,extensionRatio,reason:'OVEREXTENDED'};
+  return {blocked:false,chop:false,overextended:false,compressionRatio,extensionRatio,reason:'NORMAL'};
+}
+
+function detectMarketStateFromH1(h1Analysis,m5Candles){
+  const chop=detectChopAndExtension(m5Candles,24);
+  if(chop.blocked && chop.reason==='RANGE_TOO_TIGHT') return {state:'RANGE',reason:'CHOPPY_M5',chop};
+  if(h1Analysis.state==='TREND' && !chop.blocked) return {state:'TREND',reason:'H1_TREND_CONFIRMED',chop};
+  if(h1Analysis.state==='TRANSITION') return {state:'TRANSITION',reason:'H1_SHIFT_IN_PROGRESS',chop};
+  return {state:'RANGE',reason:'H1_RANGE',chop};
+}
+
+function resolveDirectionalBias(dailyBias, h1Analysis, disp, marketState){
+  let buyScore=0, sellScore=0;
+  const notes=[];
+  if(dailyBias.state==='BUY'){
+    const pts=dailyBias.strength==='HIGH'?5:dailyBias.strength==='MEDIUM'?4:2;
+    buyScore+=pts; notes.push(`daily_buy_${dailyBias.reason}`);
+  }else if(dailyBias.state==='SELL'){
+    const pts=dailyBias.strength==='HIGH'?5:dailyBias.strength==='MEDIUM'?4:2;
+    sellScore+=pts; notes.push(`daily_sell_${dailyBias.reason}`);
+  }else if(dailyBias.state==='NEUTRAL'){
+    if(dailyBias.reason==='BULL_CONTEXT_ONLY') buyScore+=2;
+    else if(dailyBias.reason==='BEAR_CONTEXT_ONLY') sellScore+=2;
+    else { buyScore+=1; sellScore+=1; }
+    notes.push(`daily_${dailyBias.reason||'neutral'}`);
+  }
+  if(h1Analysis.trend==='BULLISH') buyScore += h1Analysis.state==='TREND'?3:1;
+  if(h1Analysis.trend==='BEARISH') sellScore += h1Analysis.state==='TREND'?3:1;
+  if(h1Analysis.lastShift==='BOS' || h1Analysis.lastShift==='CHOCH'){
+    if(h1Analysis.trend==='BULLISH') buyScore += 1;
+    if(h1Analysis.trend==='BEARISH') sellScore += 1;
+  }
+  if(disp?.valid){
+    if(h1Analysis.trend==='BULLISH') buyScore += 1;
+    if(h1Analysis.trend==='BEARISH') sellScore += 1;
+  }
+  if(marketState?.state==='TREND'){
+    if(h1Analysis.trend==='BULLISH') buyScore += 1;
+    if(h1Analysis.trend==='BEARISH') sellScore += 1;
+  }
+  if(marketState?.state==='RANGE'){
+    buyScore -= 1; sellScore -= 1;
+  }
+  const diff=buyScore-sellScore;
+  if(diff>=3) return {direction:'BUY', confidence:'HIGH', source:'BIAS_STACK', buyScore, sellScore, diff, notes};
+  if(diff>=1) return {direction:'BUY', confidence:diff>=2?'MEDIUM':'LOW', source:'BIAS_STACK', buyScore, sellScore, diff, notes};
+  if(diff<=-3) return {direction:'SELL', confidence:'HIGH', source:'BIAS_STACK', buyScore, sellScore, diff, notes};
+  if(diff<=-1) return {direction:'SELL', confidence:diff<=-2?'MEDIUM':'LOW', source:'BIAS_STACK', buyScore, sellScore, diff, notes};
+  if(h1Analysis.trend==='BULLISH' && buyScore>=3) return {direction:'BUY', confidence:'LOW', source:'H1_LEAN', buyScore, sellScore, diff, notes};
+  if(h1Analysis.trend==='BEARISH' && sellScore>=3) return {direction:'SELL', confidence:'LOW', source:'H1_LEAN', buyScore, sellScore, diff, notes};
+  return {direction:'NONE', confidence:'LOW', source:'NO_DIRECTION', buyScore, sellScore, diff, notes};
+}
+
+function classifySetupType(direction, sweep, shift, fvg, ob, h1Analysis, validPD){
+  const reversalCore = sweep?.swept && shift?.valid;
+  const continuationCore = h1Analysis.state==='TREND' && shift?.valid && (fvg||ob);
+  if(reversalCore){
+    return {setupType:'REVERSAL',quality:(validPD || sweep?.quality==='HIGH')?'HIGH':'MEDIUM'};
+  }
+  if(continuationCore){
+    return {setupType:'CONTINUATION',quality:validPD?'HIGH':'MEDIUM'};
+  }
+  if((sweep?.swept || shift?.valid) && (fvg||ob)) return {setupType:'MIXED',quality:validPD?'MEDIUM':'LOW'};
+  return {setupType:'NONE',quality:'LOW'};
+}
+
+function detect1mEntryWithType(m1Candles,direction,context){
+  if(!m1Candles||m1Candles.length<6) return {valid:false,entry:null,type:'NONE',bodyQuality:0,candleQuality:'LOW'};
+  const last=m1Candles.at(-1), prev=m1Candles.at(-2);
+  const body=Math.abs(last.close-last.open), range=Math.max(last.high-last.low,1e-7), bodyRatio=body/range;
+  const atrVal = atr(m1Candles,14) || context?.atr || 1;
+  const tol=Math.max(atrVal*0.08,0.35);
+  const microRange = Math.max(...m1Candles.slice(-5).map(c=>c.high)) - Math.min(...m1Candles.slice(-5).map(c=>c.low));
+  const congested = microRange < atrVal*1.15;
+  const strongBody = bodyRatio>=0.42;
+  const strongCloseUp = last.close > last.open && (last.high-last.close) <= range*0.28;
+  const strongCloseDown = last.close < last.open && (last.close-last.low) <= range*0.28;
+  if(congested && bodyRatio<0.55) return {valid:false,entry:null,type:'NONE',bodyQuality:bodyRatio,candleQuality:'LOW'};
+  const fvg=context?.fvg, ob=context?.ob;
+  if(direction==='BUY'){
+    if(fvg && last.low<=fvg.mid+tol && last.close>fvg.mid && strongBody && strongCloseUp) return {valid:true,entry:last.close,type:'FVG_MID_REJECT',bodyQuality:bodyRatio,candleQuality:bodyRatio>.58?'HIGH':'MEDIUM'};
+    if(ob && last.low<=ob.top+tol && last.close>ob.mid && strongBody && strongCloseUp) return {valid:true,entry:last.close,type:'OB_REJECT',bodyQuality:bodyRatio,candleQuality:bodyRatio>.58?'HIGH':'MEDIUM'};
+    if(last.close>prev.high && strongBody && strongCloseUp) return {valid:true,entry:last.close,type:'BREAK_CONFIRM',bodyQuality:bodyRatio,candleQuality:bodyRatio>.58?'HIGH':'MEDIUM'};
+    const wickBottom=Math.min(last.open,last.close)-last.low;
+    if(wickBottom>body*0.85 && strongCloseUp && bodyRatio>=0.33) return {valid:true,entry:last.close,type:'REJECTION_CONFIRM',bodyQuality:bodyRatio,candleQuality:'MEDIUM'};
+  } else {
+    if(fvg && last.high>=fvg.mid-tol && last.close<fvg.mid && strongBody && strongCloseDown) return {valid:true,entry:last.close,type:'FVG_MID_REJECT',bodyQuality:bodyRatio,candleQuality:bodyRatio>.58?'HIGH':'MEDIUM'};
+    if(ob && last.high>=ob.bottom-tol && last.close<ob.mid && strongBody && strongCloseDown) return {valid:true,entry:last.close,type:'OB_REJECT',bodyQuality:bodyRatio,candleQuality:bodyRatio>.58?'HIGH':'MEDIUM'};
+    if(last.close<prev.low && strongBody && strongCloseDown) return {valid:true,entry:last.close,type:'BREAK_CONFIRM',bodyQuality:bodyRatio,candleQuality:bodyRatio>.58?'HIGH':'MEDIUM'};
+    const wickTop=last.high-Math.max(last.open,last.close);
+    if(wickTop>body*0.85 && strongCloseDown && bodyRatio>=0.33) return {valid:true,entry:last.close,type:'REJECTION_CONFIRM',bodyQuality:bodyRatio,candleQuality:'MEDIUM'};
+  }
+  return {valid:false,entry:null,type:'NONE',bodyQuality:bodyRatio,candleQuality:'LOW'};
+}
+
+function reclassifyMixedSetup(setupClass, direction, h1Analysis, validPD, sweep, shift, fvg, ob){
+  if(setupClass.setupType!=='MIXED') return setupClass;
+  const withShift=!!shift?.valid;
+  const withSweep=!!sweep?.swept;
+  const withZone=!!(fvg||ob);
+  if(withSweep && withShift) return {setupType:'REVERSAL', quality:validPD?'MEDIUM':'LOW'};
+  if(h1Analysis.state==='TREND' && withZone && (withShift || directionToTrend(direction)===h1Analysis.trend)) return {setupType:'CONTINUATION', quality:validPD?'MEDIUM':'LOW'};
+  if(withSweep && withZone) return {setupType:'REVERSAL', quality:'LOW'};
+  return {setupType:'WEAK', quality:'LOW'};
+}
+
+function validateContextStack({direction,dailyBias,h1Analysis,marketState,session,validPD,setupHint}){
+  if(direction==='NONE') return {ok:false,reason:'NO_DIRECTION'};
+  if(marketState.state==='RANGE'){
+    if(setupHint==='REVERSAL') return {ok:true, softPD:!validPD, softSession:!isKillzone(session), rangeMode:true};
+    return {ok:false,reason:'MARKET_RANGE'};
+  }
+  if(marketState.chop?.blocked && marketState.chop?.reason==='OVEREXTENDED' && setupHint!=='REVERSAL') return {ok:false,reason:'MARKET_OVEREXTENDED'};
+  if(!isKillzone(session)){
+    if(setupHint==='REVERSAL') return {ok:false,reason:'OUTSIDE_KILLZONE'};
+    if(h1Analysis.state!=='TREND') return {ok:false,reason:'OUTSIDE_KILLZONE'};
+  }
+  if(!validPD && dailyBias.state==='NEUTRAL' && h1Analysis.state!=='TREND') return {ok:false,reason:'INVALID_PD_LOCATION'};
+  return {ok:true, softPD:!validPD, softSession:!isKillzone(session)};
+}
+function validateSetupLayer({setupType,sweep,shift,fvg,ob,h1Analysis,validPD,setupQuality,directionConfidence}){
+  const hasZone=!!(fvg||ob);
+  const hasSweep=!!sweep?.swept;
+  const hasShift=!!shift?.valid;
+  const h1Trend=h1Analysis?.state==='TREND';
+  if(setupType==='REVERSAL'){
+    if(hasSweep && (hasShift || hasZone)) return {ok:true, quality:setupQuality||'HIGH'};
+    return {ok:false,reason:'NO_VALID_SETUP'};
+  }
+  if(setupType==='CONTINUATION'){
+    if(h1Trend && hasZone && (hasShift || directionConfidence!=='LOW' || validPD)) return {ok:true, quality:setupQuality||'MEDIUM'};
+    return {ok:false,reason:'NO_VALID_SETUP'};
+  }
+  if(setupType==='MIXED'){
+    if((hasSweep || hasShift) && hasZone) return {ok:true, downgraded:true, quality:setupQuality||'LOW'};
+    return {ok:false,reason:'NO_VALID_SETUP'};
+  }
+  if(setupType==='WEAK'){
+    if(h1Trend && hasZone && hasShift && validPD && directionConfidence==='HIGH') return {ok:true, downgraded:true, quality:'LOW'};
+    return {ok:false,reason:'NO_VALID_SETUP'};
+  }
+  return {ok:false,reason:'NO_VALID_SETUP'};
+}
+
+function validateEntryContext(entry,ctx){
+  if(!entry?.valid) return {ok:false,reason:'NO_1M_CONFIRMATION'};
+  if(entry.candleQuality==='LOW') return {ok:false,reason:'WEAK_ENTRY_CANDLE'};
+  if(ctx.marketState.state==='TRANSITION' && entry.candleQuality!=='HIGH') return {ok:false,reason:'WEAK_ENTRY_IN_TRANSITION'};
+  if(ctx.softPD && entry.type==='BREAK_CONFIRM' && entry.candleQuality!=='HIGH') return {ok:false,reason:'ENTRY_OUTSIDE_PD'};
+  return {ok:true};
+}
+
+function buildSmartStop(direction, entryPrice, payload){
+  const atrBase=Math.max(safeNumber(payload?.atrPad)||0, 0.01);
+  const absoluteFloor=Math.max(entryPrice*0.00035, 0.6);
+  const minStopDistance=Math.max(atrBase*0.9, absoluteFloor);
+  const structural=[];
+  const sweepLevel=safeNumber(payload?.sweep?.level);
+  const ob=payload?.ob;
+  const fvg=payload?.fvg;
+  const protectedLow=safeNumber(payload?.trendLeg?.protectedLow?.price);
+  const protectedHigh=safeNumber(payload?.trendLeg?.protectedHigh?.price);
+  if(direction==='BUY'){
+    if(sweepLevel) structural.push({price:sweepLevel-atrBase*0.18, source:'SWEEP_INVALIDATION', priority:1});
+    if(protectedLow) structural.push({price:protectedLow-atrBase*0.14, source:'PROTECTED_SWING', priority:2});
+    if(ob?.bottom) structural.push({price:ob.bottom-atrBase*0.12, source:'OB_EDGE', priority:3});
+    if(fvg?.bottom) structural.push({price:fvg.bottom-atrBase*0.12, source:'FVG_EDGE', priority:4});
+    const valid=structural.filter(x=>x.price<entryPrice).sort((a,b)=>a.priority-b.priority || b.price-a.price);
+    let chosen=valid[0] || {price:entryPrice-Math.max(atrBase*1.15,minStopDistance), source:'ATR_FALLBACK', priority:99};
+    let riskDistance=Math.abs(entryPrice-chosen.price);
+    let expanded=false;
+    if(riskDistance<minStopDistance){ chosen={price:entryPrice-minStopDistance, source:`${chosen.source}_EXPANDED`, priority:chosen.priority}; riskDistance=minStopDistance; expanded=true; }
+    return {sl:chosen.price, source:chosen.source, riskDistance, minStopDistance, expanded, tooTight:riskDistance < minStopDistance*0.98};
+  } else {
+    if(sweepLevel) structural.push({price:sweepLevel+atrBase*0.18, source:'SWEEP_INVALIDATION', priority:1});
+    if(protectedHigh) structural.push({price:protectedHigh+atrBase*0.14, source:'PROTECTED_SWING', priority:2});
+    if(ob?.top) structural.push({price:ob.top+atrBase*0.12, source:'OB_EDGE', priority:3});
+    if(fvg?.top) structural.push({price:fvg.top+atrBase*0.12, source:'FVG_EDGE', priority:4});
+    const valid=structural.filter(x=>x.price>entryPrice).sort((a,b)=>a.priority-b.priority || a.price-b.price);
+    let chosen=valid[0] || {price:entryPrice+Math.max(atrBase*1.15,minStopDistance), source:'ATR_FALLBACK', priority:99};
+    let riskDistance=Math.abs(entryPrice-chosen.price);
+    let expanded=false;
+    if(riskDistance<minStopDistance){ chosen={price:entryPrice+minStopDistance, source:`${chosen.source}_EXPANDED`, priority:chosen.priority}; riskDistance=minStopDistance; expanded=true; }
+    return {sl:chosen.price, source:chosen.source, riskDistance, minStopDistance, expanded, tooTight:riskDistance < minStopDistance*0.98};
+  }
+}
+
+function computeScore(factors){
+  let score=0; const reasons=[], missing=[];
+  const dailyPts = factors.dailyBias.strength==='HIGH'?14:factors.dailyBias.strength==='MEDIUM'?10:factors.dailyBias.state==='BUY'||factors.dailyBias.state==='SELL'?6:0;
+  if(dailyPts){ score+=dailyPts; reasons.push(`Daily bias ${factors.dailyBias.reason} +${dailyPts}`); }
+  else if(factors.dailyBias.state==='NEUTRAL'){ score-=3; missing.push('Daily bias neutral -3'); }
+  else { score+=2; reasons.push('Weak but usable daily bias +2'); }
+  const confPts = factors.directionConfidence==='HIGH'?8:factors.directionConfidence==='MEDIUM'?5:factors.directionConfidence==='LOW'?2:0;
+  score += confPts; if(confPts) reasons.push(`Direction confidence +${confPts}`);
+  if(factors.h1Analysis.state==='TREND'){score+=10; reasons.push('H1 trend +10');}
+  else if(factors.h1Analysis.state==='TRANSITION'){score+=3; reasons.push('H1 transition +3');}
+  else {score-=6; missing.push('H1 range -6');}
+  if(factors.validPD){score+=10; reasons.push('PD zone valid +10');}
+  else {score-=2; missing.push('PD not ideal -2');}
+  if(factors.marketState.state==='TREND'){score+=7; reasons.push('Market state trend +7');}
+  else if(factors.marketState.state==='TRANSITION'){score+=1; reasons.push('Transition context +1');}
+  else {score-=6; missing.push('Range context -6');}
+  if(factors.liquidityGate?.status==='WARN'){
+    const liqPenalty = Number.isFinite(factors.liquidityGate.penalty) ? factors.liquidityGate.penalty : 2;
+    score -= liqPenalty;
+    missing.push(`Liquidity caution -${liqPenalty}`);
+  }
+  if(Number.isFinite(factors.liquidityGate?.boost) && factors.liquidityGate.boost>0){
+    score += factors.liquidityGate.boost;
+    reasons.push(`Liquidity alignment +${factors.liquidityGate.boost}`);
+  }
+  if(factors.inducement?.status==='WARN' && Number.isFinite(factors.inducement.penalty) && factors.inducement.penalty>0){
+    score -= factors.inducement.penalty;
+    missing.push(`Inducement caution -${factors.inducement.penalty}`);
+  }
+  if(factors.sweep?.swept){ const pts=factors.sweep.quality==='HIGH'?10:6; score+=pts; reasons.push(`Sweep ${factors.sweep.type} +${pts}`); }
+  else if(factors.setupType==='REVERSAL') missing.push('No sweep');
+  if(factors.fvg){ const pts=factors.fvg.quality==='HIGH'?6:4; score+=pts; reasons.push(`FVG +${pts}`); }
+  if(factors.ob){ score+=5; reasons.push('Order block +5'); }
+  if(factors.shift?.valid){ const pts=factors.shift.type==='BOS'?8:factors.shift.type==='CHOCH'?6:3; score+=pts; reasons.push(`5m ${factors.shift.type} +${pts}`); }
+  else if(factors.setupType!=='REVERSAL') missing.push('No 5m shift');
+  if(factors.disp?.valid){score+=3; reasons.push('Displacement +3');}
+  if(isPrimeSession(factors.session)){score+=6; reasons.push('Prime killzone +6');}
+  else if(isKillzone(factors.session)){score+=2; reasons.push('Secondary killzone +2');}
+  else score-=2;
+  if(factors.chop?.blocked){score-=8; missing.push(`Anti-chop ${factors.chop.reason} -8`);}
+  if(factors.entry?.valid){ const pts=factors.entry.candleQuality==='HIGH'?10:8; score+=pts; reasons.push(`1m ${factors.entry.type} +${pts}`); }
+  if(factors.softPD){score-=1; missing.push('Soft PD penalty -1');}
+  if(factors.softSession){score-=1; missing.push('Soft session penalty -1');}
+  const qualityPts = factors.setupQuality==='HIGH'?6:factors.setupQuality==='MEDIUM'?3:factors.setupQuality==='LOW'?-2:0;
+  score += qualityPts; if(qualityPts>0) reasons.push(`Setup quality +${qualityPts}`); else if(qualityPts<0) missing.push(`Setup quality ${qualityPts}`);
+  if(factors.setupType==='MIXED'){score-=2; missing.push('Mixed setup penalty -2');}
+  if(factors.setupType==='WEAK'){score-=6; missing.push('Weak setup penalty -6');}
+  if(factors.direction==='BUY' && factors.h1Analysis.trend==='BEARISH'){score-=3; missing.push('Counter-trend buy -3');}
+  if(factors.direction==='SELL' && factors.h1Analysis.trend==='BULLISH'){score-=3; missing.push('Counter-trend sell -3');}
+  if(factors.direction==='BUY' && !factors.validPD){score-=2; missing.push('Buy outside discount -2');}
+  if(factors.direction==='SELL' && !factors.validPD){score-=2; missing.push('Sell outside premium -2');}
+  score=Math.max(0,Math.min(100,score));
+  return {score,reasons,missing};
+}
+
+function getDynamicTradeThreshold(mode,minScore,{directionConfidence,marketState,setupQuality,softPD,session}){
+  let threshold=Math.max(minScore, mode==='STRICT'?52:42);
+  if(directionConfidence==='HIGH') threshold-=3;
+  else if(directionConfidence==='LOW') threshold+=3;
+  if(marketState==='TRANSITION') threshold+=2;
+  if(marketState==='RANGE') threshold+=6;
+  if(setupQuality==='HIGH') threshold-=2;
+  else if(setupQuality==='LOW') threshold+=3;
+  if(softPD) threshold+=1;
+  if(!isKillzone(session)) threshold+=2;
+  return Math.max(38,Math.min(68,threshold));
+}
+
+function runPipelineV123(h1,m5,m1,config){
+  const {mode='FLEXIBLE',minScore=40,primeOnly=false,fvgLookback=50,minRR=2,liqLookback=60}=config;
+  if(!h1||!m5||!m1) return {status:'ERROR'};
+  const dailyBias=detectDailyLiquidityBias(h1);
+  const h1Analysis=analyzeH1Structure(h1);
+  const marketState=detectMarketStateFromH1(h1Analysis,m5);
+  const preDisp=detectDisplacement(m5,h1Analysis.trend==='BULLISH'?'BUY':'SELL');
+  const dirInfo=resolveDirectionalBias(dailyBias,h1Analysis,preDisp,marketState);
+  const direction=dirInfo.direction;
+  if(direction==='NONE') return {status:'NO TRADE',reason:'NO_DIRECTION',debug:{daily:dailyBias.reason,h1:h1Analysis.trend}};
+  const m1last=m1.at(-1);
+  const session=getSession(m1last?.datetime||'');
+  if(primeOnly && !isPrimeSession(session)) return {status:'NO TRADE',reason:`Not prime session: ${session}`};
+  const antiChop=marketState.chop;
+  const m5Swings=buildSwings(m5,3,3);
+  const drState=buildDealingRangeState(m5,m5Swings);
+  const drGate=getDirectionalEligibility(drState,direction);
+  if(drGate.status==='BLOCK') return {status:'NO TRADE',reason:`DR_BLOCKED:${drGate.reason}`,debug:{daily:dailyBias.reason,h1State:h1Analysis.state,market:marketState.state,m5PD:drState.zone,session,drReason:drGate.reason},meta:{directionCandidate:direction}};
+  const liquidityMap=buildLiquidityMap(h1,m5,m1last?.close||m5.at(-1)?.close||0,session);
+  const liquidityGate=getLiquidityAlignment(direction,liquidityMap);
+  if(liquidityGate.status==='BLOCK') return {status:'NO TRADE',reason:`LIQUIDITY_BLOCKED:${liquidityGate.reason}`,debug:{daily:dailyBias.reason,h1State:h1Analysis.state,market:marketState.state,m5PD:drState.zone,session,liq:liquidityMap.explain},meta:{directionCandidate:direction}};
+  const a=atr(m5,14)||5;
+  const sweep=detectSweep(m5,direction,a,liqLookback);
+  const fvg=detectRefinedFVG(m5,direction,fvgLookback);
+  const ob=detectRefinedOrderBlock(m5,direction);
+  const shift=detect5mShift(m5,direction,m5Swings);
+  const disp=detectDisplacement(m5,direction);
+  const inducement=evaluateInducement(direction,liquidityMap,sweep,shift,disp,marketState);
+  if(inducement.status==='BLOCK') return {status:'NO TRADE',reason:`INDUCEMENT_BLOCKED:${inducement.reason}`,debug:{daily:dailyBias.reason,h1State:h1Analysis.state,market:marketState.state,m5PD:drState.zone,session,inducement:inducement.explain},meta:{directionCandidate:direction}};
+  const validPD=drGate.status==='PASS';
+  const baseSetupClass=classifySetupType(direction,sweep,shift,fvg,ob,h1Analysis,validPD);
+  const setupClass=reclassifyMixedSetup(baseSetupClass,direction,h1Analysis,validPD,sweep,shift,fvg,ob);
+  const contextCheck=validateContextStack({direction,dailyBias,h1Analysis,marketState,session,validPD,setupHint:setupClass.setupType});
+  if(!contextCheck.ok) return {status:'NO TRADE',reason:contextCheck.reason,debug:{daily:dailyBias.reason,h1State:h1Analysis.state,market:marketState.state,m5PD:drState.zone,session},meta:{directionCandidate:direction}};
+  const setupCheck=validateSetupLayer({setupType:setupClass.setupType,sweep,shift,fvg,ob,h1Analysis,validPD,setupQuality:setupClass.quality,directionConfidence:dirInfo.confidence});
+  const entry=detect1mEntryWithType(m1,direction,{fvg,ob,atr:a});
+  const entryCheck=validateEntryContext(entry,{validPD,marketState,softPD:contextCheck.softPD});
+  const scoring=computeScore({dailyBias,h1Analysis,drState,drGate,liquidityGate,validPD,marketState,sweep,fvg,ob,shift,disp,session,chop:antiChop,entry,setupType:setupClass.setupType,setupQuality:setupClass.quality,softPD:contextCheck.softPD,softSession:contextCheck.softSession,direction,directionConfidence:dirInfo.confidence,inducement});
+  if(!setupCheck.ok) return {status:'NO TRADE',reason:setupCheck.reason,decision:scoring,debug:{daily:dailyBias.reason,h1State:h1Analysis.state,market:marketState.state,m5PD:drState.zone,setup:setupClass.setupType,sweep:sweep.type,shift:shift.type,fvg:fvg?.type||'NONE',ob:ob?.type||'NONE',session},meta:{directionCandidate:direction}};
+  if(!entryCheck.ok) return {status:scoring.score>=Math.max(minScore-6,36)?'WAIT':'NO TRADE',reason:entryCheck.reason,decision:scoring,debug:{daily:dailyBias.reason,h1State:h1Analysis.state,market:marketState.state,m5PD:drState.zone,setup:setupClass.setupType,entryType:entry.type,session},meta:{directionCandidate:direction}};
+  let threshold=getDynamicTradeThreshold(mode,minScore,{directionConfidence:dirInfo.confidence,marketState:marketState.state,setupQuality:setupClass.quality,softPD:contextCheck.softPD,session});
+  threshold += Math.min(2, liquidityGate.thresholdBump||0);
+  threshold += Math.min(3, inducement.thresholdBump||0);
+  let decision='NO TRADE';
+  if(scoring.score>=threshold) decision='TRADE';
+  else if(scoring.score>=threshold-4) decision='FORMING';
+  const payload={direction,atrPad:a*0.5,trendLeg:{protectedLow:direction==='BUY'?{price:m5Swings.lastPL?.price||null}:null,protectedHigh:direction==='SELL'?{price:m5Swings.lastPH?.price||null}:null},sweep,m1LastClose:m1last?.close,m1Time:m1last?.datetime,fvg,ob,setupType:setupClass.setupType,liquidityMap,drState};
+  payload.setupKey = buildSetupFingerprint(direction, setupClass.setupType, payload, session);
+  const result={
+    status:decision,
+    direction,session,
+    decision:{score:scoring.score,threshold,grade:scoring.score>=80?'A':scoring.score>=65?'B':scoring.score>=50?'C':'D',reasons:scoring.reasons,missing:scoring.missing},
+    debug:{dailyBias:`${dailyBias.state} (${dailyBias.reason})`,directionSource:dirInfo.source,directionConfidence:dirInfo.confidence,h1Trend:h1Analysis.trend,h1State:h1Analysis.state,market:marketState.state,antiChop:antiChop.reason,m5PDZone:drState.zone,validPD,drReason:drGate.reason,liqTarget:liquidityMap.targetSide,softPD:contextCheck.softPD?'YES':'NO',softSession:contextCheck.softSession?'YES':'NO',setupType:setupClass.setupType,setupQuality:setupClass.quality,sweep:sweep.type,shift:shift.type,fvg:fvg?.type||'NONE',ob:ob?.type||'NONE',inducement:inducement.reason,session},
+    meta:{marketState:marketState.state,h1State:h1Analysis.state,directionConfidence:dirInfo.confidence,setupQuality:setupClass.quality,directionCandidate:direction}
+  };
+  if(decision==='TRADE'){ result.entry={valid:true,entry:entry.entry,candleTime:m1last?.datetime,note:entry.type}; result.payload=payload; }
+  return result;
+}
+
+function buildTradePlan(result,minRR=2.0){
+  if(!result||result.status!=='TRADE') return null;
+  const {direction,entry:entryObj,payload}=result;
+  let entryPrice=safeNumber(entryObj?.entry)||safeNumber(payload?.m1LastClose);
+  if(!entryPrice||!direction) return null;
+  const stopObj=buildSmartStop(direction, entryPrice, payload);
+  if(stopObj.tooTight) return null;
+  const sl=stopObj.sl;
+  const risk=Math.abs(entryPrice-sl); if(!risk||risk<=0) return null;
+  const tp1=direction==='BUY'?entryPrice+risk:entryPrice-risk;
+  const tp2=direction==='BUY'?entryPrice+risk*minRR:entryPrice-risk*minRR;
+  const tp3=direction==='BUY'?entryPrice+risk*3:entryPrice-risk*3;
+  const rr=Math.abs(tp2-entryPrice)/risk; if(rr<Math.max(1.8,minRR-0.1)) return null;
+  if(risk < stopObj.minStopDistance*0.98) return null;
+  return {time:entryObj?.candleTime||payload?.m1Time,direction,entry:entryPrice,sl,slType:stopObj.source,stopDistance:risk,minStopDistance:stopObj.minStopDistance,tp1,tp2,tp3,score:result.decision?.score,grade:result.decision?.grade,note:entryObj?.note||'',setupType:payload?.setupType||'NONE',setupKey:payload?.setupKey||''};
+}
+
+function simulateTrade(candles1m,plan,startIndex){
+  if(!plan||startIndex==null) return null;
+  const {direction,entry,tp1,tp2,tp3}=plan; let sl=plan.sl,tp1Hit=false;
+  const beTrigger=direction==='BUY' ? entry + (tp1-entry)*0.9 : entry - (entry-tp1)*0.9;
+  for(let i=startIndex+1;i<candles1m.length;i++){
+    const c=candles1m[i];
+    if(direction==='BUY'){
+      if(c.low<=sl) return {exitIndex:i,outcome:tp1Hit?'BREAKEVEN':'LOSS',exitPrice:sl,r:tp1Hit?0:calcR(entry,plan.sl,sl,direction)};
+      if(!tp1Hit&&c.high>=tp1&&c.close>=beTrigger){tp1Hit=true;sl=entry;}
+      if(c.high>=tp2) return {exitIndex:i,outcome:'TP2',exitPrice:tp2,r:calcR(entry,plan.sl,tp2,direction)};
+      if(c.high>=tp3) return {exitIndex:i,outcome:'TP3',exitPrice:tp3,r:calcR(entry,plan.sl,tp3,direction)};
+    } else {
+      if(c.high>=sl) return {exitIndex:i,outcome:tp1Hit?'BREAKEVEN':'LOSS',exitPrice:sl,r:tp1Hit?0:calcR(entry,plan.sl,sl,direction)};
+      if(!tp1Hit&&c.low<=tp1&&c.close<=beTrigger){tp1Hit=true;sl=entry;}
+      if(c.low<=tp2) return {exitIndex:i,outcome:'TP2',exitPrice:tp2,r:calcR(entry,plan.sl,tp2,direction)};
+      if(c.low<=tp3) return {exitIndex:i,outcome:'TP3',exitPrice:tp3,r:calcR(entry,plan.sl,tp3,direction)};
+    }
+  }
+  const last=candles1m.at(-1);
+  return {exitIndex:candles1m.length-1,outcome:'OPEN',exitPrice:last?.close,r:0};
+}
+
+function drawEquityCurve(values){
+  const canvas=$('equityCanvas'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.02)';ctx.fillRect(0,0,w,h);
+  if(!values.length){$('equityNote').textContent='No curve yet.';return;}
+  const min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
+  ctx.strokeStyle='rgba(255,255,255,.10)';
+  for(let i=0;i<5;i++){const y=20+i*((h-40)/4);ctx.beginPath();ctx.moveTo(20,y);ctx.lineTo(w-20,y);ctx.stroke();}
+  const startVal=values[0];
+  ctx.lineWidth=2;ctx.beginPath();
+  values.forEach((v,idx)=>{
+    const x=20+idx*((w-40)/Math.max(1,values.length-1));
+    const y=h-20-((v-min)/span)*(h-40);
+    if(idx===0){ctx.moveTo(x,y);}else{ctx.lineTo(x,y);}
+  });
+  ctx.strokeStyle=values.at(-1)>=startVal?'#3dd68c':'#f56a79';
+  ctx.stroke();
+  $('equityNote').textContent=`Points: ${values.length} | Start: $${fmt(values[0])} | End: $${fmt(values.at(-1))} | Peak: $${fmt(Math.max(...values))}`;
+}
+function renderTrades(trades){
+  const tbody=$('tradeTable').querySelector('tbody');tbody.innerHTML='';
+  trades.slice(0,300).forEach((t,idx)=>{
+    const tr=document.createElement('tr');
+    const rColor=t.r>0?'color:var(--green)':t.r<0?'color:var(--red)':'';
+    tr.innerHTML=`<td>${idx+1}</td><td>${t.time||'—'}</td><td style="${t.side==='BUY'?'color:var(--green)':'color:var(--red)'}">${t.side}</td><td>${t.score??'—'}</td><td>${fmt(t.entry,2)}</td><td>${fmt(t.sl,2)}</td><td>${t.slType||'—'}</td><td>${t.setupType||'—'}</td><td>${fmt(t.tp2,2)}</td><td>${t.outcome}</td><td style="${rColor}">${fmt(t.r,2)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+function updateSummary(result){
+  const wins=result.trades.filter(t=>t.r>0),losses=result.trades.filter(t=>t.r<0),bes=result.trades.filter(t=>t.r===0);
+  const netR=result.trades.reduce((a,b)=>a+b.r,0);
+  const grossWin=wins.reduce((a,b)=>a+b.r,0),grossLoss=Math.abs(losses.reduce((a,b)=>a+b.r,0));
+  const pf=grossLoss>0?grossWin/grossLoss:grossWin>0?999:0;
+  const best=result.trades.length?Math.max(...result.trades.map(t=>t.r)):0;
+  const worst=result.trades.length?Math.min(...result.trades.map(t=>t.r)):0;
+  const avgWin=wins.length?grossWin/wins.length:0;
+  const avgLoss=losses.length?losses.reduce((a,b)=>a+b.r,0)/losses.length:0;
+  const avgScore=result.trades.length?result.trades.reduce((a,b)=>a+(b.score||0),0)/result.trades.length:0;
+  setText('btResult',netR>0?'PROFITABLE':result.trades.length?'NEGATIVE':'WAITING',`big mono ${netR>0?'green':result.trades.length?'red':'gold'}`);
+  setText('btTrades',String(result.trades.length),'big mono');
+  setText('btWinRate',result.trades.length?`${fmt((wins.length/result.trades.length)*100,1)}%`:'0%',`big mono ${wins.length>losses.length?'green':'gold'}`);
+  setText('btNetR',`${fmt(netR,2)}R`,`big mono ${netR>=0?'green':'red'}`);
+  setText('btDrawdown',`${fmt(result.maxDrawdownR,2)}R`,'big mono red');
+  setText('btEquity',`$${fmt(result.finalEquity,2)}`,'big mono');
+  setText('btWins',String(wins.length));setText('btLosses',String(losses.length));setText('btBE',String(bes.length));
+  setText('btAvgWin',`${fmt(avgWin,2)}R`);setText('btAvgLoss',`${fmt(avgLoss,2)}R`);
+  setText('btPF',fmt(pf,2));setText('btBest',`${fmt(best,2)}R`);setText('btWorst',`${fmt(worst,2)}R`);
+  setText('diagAvgScore',fmt(avgScore,1));
+  $('scoreFill').style.width=`${Math.min(100,avgScore)}%`;
+}
+function exportTrades(){
+  if(!lastTrades.length){status('No trades to export.');return;}
+  const headers=['time','side','score','entry','sl','slType','setupType','tp1','tp2','tp3','note','outcome','r','pnl'];
+  const csv=[headers.join(',')].concat(lastTrades.map(r=>headers.map(h=>`"${String(r[h]??'').replaceAll('"','""')}"`).join(','))).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='tradepro_v12_3_phase1_trades.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+async function runBacktest(){
+  const runBtn=$('runBtn');
+  try{
+    runBtn.disabled=true;
+    const apikey=$('apiKey').value.trim();
+    if(!apikey) throw new Error('Paste a TwelveData API key first.');
+    const symbol=$('symbol').value;
+    const bars=Number($('bars').value||1800);
+    const mode=$('decisionMode').value;
+    const minScore=Number($('minScore').value||40);
+    const riskPct=Number($('riskPct').value||1);
+    const primeOnly=$('primeOnly').value==='true';
+    const fvgLookback=Number($('fvgLookback').value||50);
+    const liqLookback=Number($('liqLookback').value||60);
+    const minRR=Number($('minRR').value||2.0);
+
+    status(`Fetching data for ${symbol}...`);
+    const [h1Data,m5Data,m1Data]=await Promise.all([
+      fetchSeriesChunked(symbol,'1h',apikey,Math.max(320,Math.ceil(bars/60)+160)),
+      fetchSeriesChunked(symbol,'5min',apikey,Math.max(900,Math.ceil(bars/5)+260)),
+      fetchSeriesChunked(symbol,'1min',apikey,bars)
+    ]);
+    status(`Data loaded. Running Patch 4C Daily Bias backtest on ${bars} bars... Large runs may take longer on mobile.`);
+
+    const trades=[],equityCurve=[10000],tradeDebug=[],rejectSamples=[];
+    const rejectCounts={};
+    const setupUsage=new Map();
+    const state={lastTrade:null};
+    const diag={scanned:0,noTrade:0,wait:0,trade:0,buys:0,sells:0,directionBuy:0,directionSell:0,totalScore:0,scoreCount:0};
+    let equity=10000,peakEquity=10000,maxDrawdownR=0;
+    const warmup=200; let i=warmup;
+
+    while(i<m1Data.length-10){
+      diag.scanned++;
+      const anchorTs=toTimestamp(m1Data[i]?.datetime);
+      const h1Idx=findLastIndexAtOrBefore(h1Data,anchorTs);
+      const m5Idx=findLastIndexAtOrBefore(m5Data,anchorTs);
+      if(h1Idx<0||m5Idx<0){ rejectCounts['align_miss']=(rejectCounts['align_miss']||0)+1; i++; continue; }
+
+      const h1s=sliceToIndex(h1Data,h1Idx), m5s=sliceToIndex(m5Data,m5Idx), m1s=sliceToIndex(m1Data,i);
+      const pipeline=runPipelineV123(h1s,m5s,m1s,{mode,minScore,primeOnly,fvgLookback,minRR,liqLookback});
+      if(pipeline.meta?.directionCandidate==='BUY') diag.directionBuy++;
+      if(pipeline.meta?.directionCandidate==='SELL') diag.directionSell++;
+      if(pipeline.decision){diag.totalScore+=pipeline.decision.score||0;diag.scoreCount++;}
+
+      if(pipeline.status==='NO TRADE'){
+        diag.noTrade++;
+        const key=pipeline.reason||'unknown'; rejectCounts[key]=(rejectCounts[key]||0)+1;
+        if(rejectSamples.length<24){
+          rejectSamples.push(`[${m1Data[i]?.datetime}] NO TRADE | ${pipeline.reason||'—'} | score=${pipeline.decision?.score??0} | daily=${pipeline.debug?.dailyBias||pipeline.debug?.daily||'—'} | h1=${pipeline.debug?.h1State||pipeline.debug?.h1||'—'} | market=${pipeline.debug?.market||'—'} | pd=${pipeline.debug?.m5PDZone||pipeline.debug?.m5PD||'—'} | setup=${pipeline.debug?.setupType||pipeline.debug?.setup||'—'}`);
+        }
+        i++; continue;
+      }
+      if(pipeline.status==='WAIT'||pipeline.status==='FORMING'){ diag.wait++; i++; continue; }
+
+      diag.trade++;
+      if(pipeline.direction==='BUY') diag.buys++; else diag.sells++;
+
+      const plan=buildTradePlan(pipeline,minRR);
+      if(!plan){ rejectCounts['plan_fail']=(rejectCounts['plan_fail']||0)+1; i++; continue; }
+      if(shouldRejectStaleSetup(plan, setupUsage, {state:pipeline.meta?.marketState||'TREND'}, {state:pipeline.meta?.h1State||'TREND'})){ rejectCounts['STALE_SETUP_REUSE']=(rejectCounts['STALE_SETUP_REUSE']||0)+1; i++; continue; }
+      if(isDuplicateTradeCandidate(plan, state)){ rejectCounts['DUPLICATE_REENTRY']=(rejectCounts['DUPLICATE_REENTRY']||0)+1; i++; continue; }
+
+      const sim=simulateTrade(m1Data,plan,i);
+      if(!sim){ rejectCounts['sim_fail']=(rejectCounts['sim_fail']||0)+1; i++; continue; }
+
+      const riskAmt=equity*(riskPct/100), pnl=riskAmt*sim.r;
+      equity+=pnl; peakEquity=Math.max(peakEquity,equity);
+      maxDrawdownR=Math.max(maxDrawdownR,(peakEquity-equity)/Math.max(1,riskAmt));
+
+      trades.push({time:plan.time,side:plan.direction,score:plan.score,entry:plan.entry,sl:plan.sl,slType:plan.slType,setupType:plan.setupType,stopDistance:plan.stopDistance,tp1:plan.tp1,tp2:plan.tp2,tp3:plan.tp3,note:plan.note,outcome:sim.outcome,r:sim.r,pnl});
+      setupUsage.set(plan.setupKey,{time:plan.time,entry:plan.entry});
+      state.lastTrade={time:plan.time,entry:plan.entry,direction:plan.direction,stopDistance:plan.stopDistance,setupKey:plan.setupKey};
+      if(tradeDebug.length<18){
+        tradeDebug.push(`[${plan.time||'—'}] ${plan.direction} | score=${plan.score} | setup=${plan.setupType} | entry=${plan.note} | stop=${plan.slType} | ${sim.outcome} | R=${fmt(sim.r,2)}`);
+      }
+      equityCurve.push(equity);
+      i=Math.max(i+1,sim.exitIndex);
+    }
+
+    lastTrades=trades;
+    updateSummary({trades,finalEquity:equity,maxDrawdownR});
+    renderTrades(trades); drawEquityCurve(equityCurve);
+
+    setText('diagScanned',String(diag.scanned)); setText('diagNoTrade',String(diag.noTrade));
+    setText('diagWait',String(diag.wait)); setText('diagTrade',String(diag.trade));
+    setText('diagBuys',String(diag.buys)); setText('diagSells',String(diag.sells));
+    setText('diagMode',mode); setText('diagAvgScore',fmt(diag.scoreCount?diag.totalScore/diag.scoreCount:0,1));
+
+    const topR=Object.entries(rejectCounts).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k,v])=>`  ${k}: ${v}`).join('\n')||'  none';
+
+    $('engineStory').textContent =
+`V12.3 Patch 4C Complete
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Symbol:         ${symbol}
+1m Bars:        ${bars}
+Mode:           ${mode}
+Min Score:      ${minScore}
+Min RR:         ${minRR}R
+Prime Only:     ${primeOnly}
+Risk/Trade:     ${riskPct}%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase A2.2 Core:
+✅ Daily Liquidity Bias finalized
+✅ Equal Highs / Lows integrated into bias
+✅ Softer bias gating
+✅ H1 Context + direction confidence
+✅ Market State + softer chop threshold
+✅ Context Stack
+✅ Smart SL priority improved
+✅ Duplicate/re-entry control
+✅ H4 removed from execution
+✅ liqLookback wired from UI
+✅ setup validation rebuilt
+✅ balanced BUY/SELL scoring
+✅ dynamic thresholds for TRADE / FORMING
+✅ corrected TP2/TP3 sequencing + preserved entries
+✅ softened dealing range gate
+✅ liquidity as context (not hard gate)
+✅ partial-sweep-aware liquidity scoring
+✅ lighter inducement proximity block
+✅ conservative ambiguous-bar handling
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Trades:         ${trades.length}
+Dir BUY/Sell:   ${diag.directionBuy}/${diag.directionSell}
+Avg Score:      ${fmt(diag.scoreCount?diag.totalScore/diag.scoreCount:0,1)}
+Final Equity:   $${fmt(equity,2)}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Top Rejections:
+${topR}`;
+
+    $('debugNotes').textContent=[
+      'Phase A2.2 NO TRADE samples:',
+      ...(rejectSamples.length?rejectSamples:['none']),
+      '',
+      'Executed trades:',
+      ...(tradeDebug.length?tradeDebug:['none'])
+    ].join('\n');
+
+    status(`V12.3 Phase A2.2 complete. Trades: ${trades.length} | Equity: $${fmt(equity,2)}`);
+  }catch(err){
+    console.error(err); status(err.message||'Backtest failed.');
+  }finally{
+    runBtn.disabled=false;
+  }
+}
+
+$('saveBtn').addEventListener('click',saveKey);
+$('runBtn').addEventListener('click',runBacktest);
+$('exportBtn').addEventListener('click',exportTrades);
+loadKey();
+
+// ===== PATCH 4B: Equal Highs / Lows =====
+function detectEqualLevels(candles, lookback = 80) {
+    if (!candles || candles.length < 20) return { eqHighs: [], eqLows: [] };
+
+    const a = atr(candles, 14) || 1;
+    const tol = a * 0.12;
+
+    const pivots = detectSwingPivots(candles, lookback, 2, 2) || [];
+
+    const highs = pivots.filter(p => p.type === 'PH');
+    const lows = pivots.filter(p => p.type === 'PL');
+
+    const eqHighs = [];
+    const eqLows = [];
+
+    for (let i = 0; i < highs.length - 1; i++) {
+        for (let j = i + 1; j < highs.length; j++) {
+            if (Math.abs(highs[i].price - highs[j].price) <= tol) {
+                eqHighs.push({
+                    level: (highs[i].price + highs[j].price) / 2,
+                    type: 'EQH',
+                    quality: 'HIGH'
+                });
+            }
+        }
+    }
+
+    for (let i = 0; i < lows.length - 1; i++) {
+        for (let j = i + 1; j < lows.length; j++) {
+            if (Math.abs(lows[i].price - lows[j].price) <= tol) {
+                eqLows.push({
+                    level: (lows[i].price + lows[j].price) / 2,
+                    type: 'EQL',
+                    quality: 'HIGH'
+                });
+            }
+        }
+    }
+
+    return { eqHighs, eqLows };
+}
+
+</script>
+</body>
+</html>
